@@ -23,5 +23,4 @@ public class Chatroom {
 
     @OneToMany(mappedBy = "chatroom")
     private List<MemberChatroom> memberChatroomList = new ArrayList<>();
-
 }
