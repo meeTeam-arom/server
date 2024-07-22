@@ -1,4 +1,4 @@
-package com.example.meeTeam.evaluation;
+package com.example.meeTeam.chatroom;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,18 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "evaluation")
-@Getter
+@Table(name = "chatroom")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Evaluation {
-
+@Getter
+public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private double evaluation_score;
+    @Lob
+    private String content;
 
-    @Column
-    private String evaluated_member;
+
 }
