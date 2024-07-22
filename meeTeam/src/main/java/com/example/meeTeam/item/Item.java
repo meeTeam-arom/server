@@ -1,18 +1,16 @@
-package com.example.meeTeam.schedules;
+package com.example.meeTeam.item;
 
-import com.example.meeTeam.global.entity.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name = "schedule")
+@Table(name = "item")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedules extends BaseEntity {
-
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
