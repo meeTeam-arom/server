@@ -1,5 +1,6 @@
 package com.example.meeTeam.chatroom;
 
+import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member_chatroom")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MemberChatroom {
+public class MemberChatroom extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

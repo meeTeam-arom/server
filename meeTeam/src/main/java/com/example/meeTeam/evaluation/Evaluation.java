@@ -1,5 +1,6 @@
 package com.example.meeTeam.evaluation;
 
+import com.example.meeTeam.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "evaluation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Evaluation {
+public class Evaluation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

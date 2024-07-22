@@ -2,6 +2,7 @@ package com.example.meeTeam.orders;
 
 
 import com.example.meeTeam.chatroom.Chatroom;
+import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class OrderProduct {
+public class OrderProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
