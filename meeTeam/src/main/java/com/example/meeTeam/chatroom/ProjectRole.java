@@ -5,23 +5,24 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "chatroom")
+@Table(name = "role")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Chatroom {
+public class ProjectRole {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String chatroomName;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    private int totalMember;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_chatroom_id")
+    private MemberChatroom memberChatroom;
 
-    @OneToMany(mappedBy = "chatroom")
-    private List<MemberChatroom> memberChatroomList = new ArrayList<>();
+    public enum Role{
 
+    }
 }
