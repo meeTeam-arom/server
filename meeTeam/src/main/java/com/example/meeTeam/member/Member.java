@@ -1,10 +1,15 @@
 package com.example.meeTeam.member;
 
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.w3c.dom.stylesheets.LinkStyle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -41,4 +46,7 @@ public class Member extends BaseEntity {
     private double longitude;
 
     private String available_date;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Orders> orders = new ArrayList<>();
 }
