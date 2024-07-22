@@ -6,6 +6,7 @@ package com.example.meeTeam.member;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class Member {
+
     @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
