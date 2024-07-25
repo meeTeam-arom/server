@@ -1,6 +1,7 @@
 package com.example.meeTeam.image;
 
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.item.Item;
 import com.example.meeTeam.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,15 +21,8 @@ public class Image extends BaseEntity {
     @Column(name = "image_url", nullable = false)
     private String url;
 
-    @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    @Builder
-    public Image(String url, Member member) {
-        this.url = url;
-        this.member = member;
-    }
+    @OneToOne(mappedBy = "image")
+    private Item item;
 
 //    public void updateUrl(String changedUrl) {
 //        this.url = changedUrl;

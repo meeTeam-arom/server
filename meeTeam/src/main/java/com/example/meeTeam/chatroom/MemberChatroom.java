@@ -23,4 +23,7 @@ public class MemberChatroom extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToOne(mappedBy = "memberChatroom")
+    private ProjectRole role;
 }

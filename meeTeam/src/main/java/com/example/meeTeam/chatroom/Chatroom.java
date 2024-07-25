@@ -1,6 +1,7 @@
 package com.example.meeTeam.chatroom;
 
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.schedules.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,4 +25,8 @@ public class Chatroom extends BaseEntity {
 
     @OneToMany(mappedBy = "chatroom")
     private List<MemberChatroom> memberChatroomList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chatroom")
+    private List<Schedule> schedules = new ArrayList<>();
+
 }
