@@ -19,11 +19,11 @@ public class ProjectRole extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_chatroom_id")
     private MemberChatroom memberChatroom;
 
     public enum Role{
-
+        LEADER, FOLLOWER
     }
 }

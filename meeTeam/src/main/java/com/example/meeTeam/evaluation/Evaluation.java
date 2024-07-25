@@ -1,6 +1,7 @@
 package com.example.meeTeam.evaluation;
 
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,8 +18,9 @@ public class Evaluation extends BaseEntity {
     private Long id;
 
     @Column
-    private double evaluation_score;
+    private double evaluationScore;
 
-    @Column
-    private String evaluated_member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_evaluation")
+    private Member member;
 }

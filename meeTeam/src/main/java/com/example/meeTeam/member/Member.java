@@ -1,5 +1,7 @@
 package com.example.meeTeam.member;
 
+import com.example.meeTeam.chatroom.MemberChatroom;
+import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
@@ -21,32 +23,34 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String member_name;
+    private String memberName;
 
-    private String member_password;
+    private String memberPassword;
 
-    private String member_phone_num;
+    private String memberPhoneNum;
 
-    private String member_email;
+    private String memberEmail;
 
-    private String member_role;
+    private String memberRole;
 
-    private double member_manner_temp;
+    private double memberMannerTemp;
 
-    private Long member_used_coins;
+    private Long memberUsedCoins;
 
-    private Long member_earned_coins;
-
-    private String created_at;
-
-    private String updated_at;
+    private Long memberEarnedCoins;
 
     private double latitude;
 
     private double longitude;
 
-    private String available_date;
+    private String availableDate;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Orders> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberChatroom> memberChatroomList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Evaluation> evaluations = new ArrayList<>();
 }
