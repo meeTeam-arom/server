@@ -4,6 +4,7 @@ import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.schedules.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,10 +24,42 @@ public class Chatroom extends BaseEntity {
 
     private int totalMember;
 
+    private String code;
+
     @OneToMany(mappedBy = "chatroom")
     private List<MemberChatroom> memberChatroomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "chatroom")
     private List<Schedule> schedules = new ArrayList<>();
 
+    @Builder
+    public Chatroom(Long id, String chatroomName, int totalMember, String code, List<MemberChatroom> memberChatroomList,List<Schedule> schedules) {
+        this.id = id;
+        this.chatroomName = chatroomName;
+        this.totalMember = totalMember;
+        this.code = code;
+        this.memberChatroomList = memberChatroomList;
+        this.schedules = schedules;
+    }
+
+    public static Chatroom toEntity(ChatroomDTO chatroomDTO){
+        return new Chatroom(
+                chatroomDTO.getId(),
+                chatroomDTO.getChatroomName(),
+                chatroomDTO.getTotalMember(),
+                chatroomDTO.getCode(),
+                chatroomDTO.getMemberChatroomList(),
+                chatroomDTO.getSchedules()
+        );
+    }
+
+
+    public void addMemberChatroom(MemberChatroom memberChatroom) {
+        memberChatroom.setChatroom(this);
+        memberChatroomList.add(memberChatroom);
+    }
+
+    public void addSchedule(Schedule schedule) {
+
+    }
 }
