@@ -6,6 +6,7 @@ import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -22,6 +23,8 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String email;
 
     private String memberName;
 
@@ -53,4 +56,24 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Evaluation> evaluations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberOAuth> memberOAuths = new ArrayList<>();
+
+
+    @Builder
+    public Member(String email, String memberName, String memberPassword, String memberPhoneNum, String memberEmail, String memberRole, double memberMannerTemp, Long memberUsedCoins, Long memberEarnedCoins, double latitude, double longitude, String availableDate) {
+        this.email = email;
+        this.memberName = memberName;
+        this.memberPassword = memberPassword;
+        this.memberPhoneNum = memberPhoneNum;
+        this.memberEmail = memberEmail;
+        this.memberRole = memberRole;
+        this.memberMannerTemp = memberMannerTemp;
+        this.memberUsedCoins = memberUsedCoins;
+        this.memberEarnedCoins = memberEarnedCoins;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.availableDate = availableDate;
+    }
 }
