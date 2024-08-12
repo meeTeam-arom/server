@@ -11,3 +11,34 @@ spring:
     properties:
       hibernate:
     database-platform: org.hibernate.dialect.MySQLDialect
+jwt:
+  secret: dflm2p3kmfweoifn1394gnuqef1235fgasdfg444wdf34asdf8asdf934d
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 08cfd37903ce1b4058b48b4bc0566718
+            client-secret: lbESfBCmS5Xw90mOTcNz0xq3xernrKD5
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
+            client-name: kakao
+            scope:
+              - profile_nickname
+          naver:
+            client-id: lqFGUdYKTxcJ3lBlIyJV
+            client-secret: xZE06K6Qiy
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
+            client-name: Naver
+            scope:
+              - name
+              - email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id

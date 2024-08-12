@@ -73,14 +73,12 @@ public enum ErrorCode implements BaseCode {
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "LOGIN-0001", "이메일이 잘못됨"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON-0000", "잘못된 요청입니다."),
     EXIST_EMAIL(HttpStatus.BAD_REQUEST, "COMMON-0002", "이미 존재하는 회원입니다."),
-
-
-    //Qna 에러
-    NO_QNA(HttpStatus.NO_CONTENT, "QNA-0000", "게시된 문의사항이 없습니다."),
-    /*
-    *
-    *
-    * */
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER-0000", "존재하지 않는 회원입니다."),
+    PASSWORD_ERROR(HttpStatus.BAD_REQUEST, "LOGIN-0000", "잘못된 비밀번호입니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN-0001", "토큰ㅇ"),
+    EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN-0000", "토큰 오류"),
+    EMPTY_TOKEN_PROVIDED(HttpStatus.UNAUTHORIZED, "TOKEN-0002", "토큰 텅텅"),
+    INVALID_EMAIL_OR_PASSWORD(HttpStatus.NOT_FOUND, "MEMBER-0001", "유효하지 않는 이메일, 비번"),
 
     // 5xx : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER-0000", "서버 에러");
