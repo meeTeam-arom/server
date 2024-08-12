@@ -12,14 +12,14 @@ spring:
       hibernate:
     database-platform: org.hibernate.dialect.MySQLDialect
 jwt:
-  secret: dflm2p3kmfweoifn1394gnuqef1235fgasdfg444wdf34asdf8asdf934d
+  secret: ${JWT_SECRET}
   security:
     oauth2:
       client:
         registration:
           kakao:
-            client-id: 08cfd37903ce1b4058b48b4bc0566718
-            client-secret: lbESfBCmS5Xw90mOTcNz0xq3xernrKD5
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
@@ -27,8 +27,8 @@ jwt:
             scope:
               - profile_nickname
           naver:
-            client-id: lqFGUdYKTxcJ3lBlIyJV
-            client-secret: xZE06K6Qiy
+            client-id: ${NAVER_CLIENT_ID}
+            client-secret: ${NAVER_CLIENT_SECRET}
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
