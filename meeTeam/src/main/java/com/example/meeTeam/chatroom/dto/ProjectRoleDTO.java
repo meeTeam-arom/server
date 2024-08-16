@@ -1,6 +1,7 @@
-package com.example.meeTeam.chatroom;
+package com.example.meeTeam.chatroom.dto;
 
-import jakarta.persistence.*;
+import com.example.meeTeam.chatroom.MemberChatroom;
+import com.example.meeTeam.chatroom.ProjectRole;
 import lombok.*;
 
 @Getter

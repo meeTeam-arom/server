@@ -6,10 +6,12 @@ import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.auth.token.vo.TokenResponse;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
+import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.OAuthProviderType;
 import com.example.meeTeam.member.converter.MemberConverter;
 import com.example.meeTeam.member.dto.MemberDTO;
+import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.dto.MemberRegisterRequestDto;
 import com.example.meeTeam.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -20,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+import static com.example.meeTeam.global.exception.codes.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.meeTeam.global.properties.JwtProperties.*;
 
 
@@ -53,13 +58,13 @@ public class MemberServiceImpl implements MemberService {
 
         return memberRepository.findMemberByOAuthIdAndProviderType(oauthId, providerType)
                 .orElseThrow(() -> {
-                    log.warn("[findMemberByOAuthId] id:{}, {}", oauthId, ErrorCode.MEMBER_NOT_FOUND);
-                    return new BaseException(ErrorCode.MEMBER_NOT_FOUND);
+                    log.warn("[findMemberByOAuthId] id:{}, {}", oauthId, MEMBER_NOT_FOUND);
+                    return new BaseException(MEMBER_NOT_FOUND);
                 });
     }
 
     public TokenResponse localLogin(MemberRegisterRequestDto request, HttpServletResponse response){
-        Member member = memberRepository.findMemberByEmail(request.email()).orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findMemberByEmail(request.email()).orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.password(), member.getMemberPassword())){
             log.info("비밀번호 틀림");

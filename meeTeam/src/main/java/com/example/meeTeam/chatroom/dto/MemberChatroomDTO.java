@@ -1,10 +1,8 @@
-package com.example.meeTeam.chatroom;
+package com.example.meeTeam.chatroom.dto;
 
+import com.example.meeTeam.chatroom.Chatroom;
+import com.example.meeTeam.chatroom.ProjectRole;
 import com.example.meeTeam.member.Member;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Getter

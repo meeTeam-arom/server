@@ -61,7 +61,23 @@ public enum ErrorCode implements BaseCode {
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
     NOT_VALID_HEADER_ERROR(HttpStatus.NOT_FOUND, "G012", "Header에 데이터가 존재하지 않는 경우 "),
 
+    //인원 초과됨
+    OVER_NUMBER_PEOPLE(HttpStatus.BAD_REQUEST,"G013","인원 수가 초과되어 입장 불가능"),
+
+    //방 이미 입장함
+    ALREADY_ENTER_ROOM(HttpStatus.BAD_REQUEST,"G014","현재 방에 이미 입장을 함"),
+    
+    //방을 찾을수 없음
+    ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST,"G015","방을 찾을 수 없음"),
     // 4xx : client error
+    
+    //일정없음
+    SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST,"G016","일정을 찾을 수 없음"),
+
+    //평가할거 없음
+    EVALUATION_NOT_FOUND(HttpStatus.BAD_REQUEST,"G017","평가항목 찾을 수 없음"),
+
+    SHORT_NUMBER_PEOPLE(HttpStatus.BAD_REQUEST,"G018","방 인원이 아직 모자름"),
 
     //자잘한 에러
     SEARCH_KEYWORD_TOO_SHORT(HttpStatus.BAD_REQUEST, "KEYWORD-0000", "검색어는 3글자부터 입력하세요."),

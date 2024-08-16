@@ -1,12 +1,11 @@
-package com.example.meeTeam.chatroom;
+package com.example.meeTeam.chatroom.repository;
 
+import com.example.meeTeam.chatroom.Chatroom;
+import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberChatroomRepository extends JpaRepository<MemberChatroom, Long> {
 

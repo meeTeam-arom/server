@@ -4,6 +4,7 @@ import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,18 @@ public class Evaluation extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_evaluation")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member targetMember;
+
+    private boolean complete;
+
+    @Builder
+    public Evaluation(double evaluationScore, Member member,Member targetMember, boolean complete){
+        this.evaluationScore = evaluationScore;
+        this.member = member;
+        this.targetMember = targetMember;
+        this.complete = complete;
+    }
+
 }
