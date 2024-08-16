@@ -1,16 +1,13 @@
 package com.example.meeTeam.member.service;
 
 import com.example.meeTeam.global.auth.token.vo.TokenResponse;
-import com.example.meeTeam.member.Member;
-import com.example.meeTeam.member.OAuthProviderType;
 import com.example.meeTeam.member.dto.MemberDTO;
-import com.example.meeTeam.member.dto.MemberDetails;
-import com.example.meeTeam.member.dto.MemberRegisterRequestDto;
 import jakarta.servlet.http.HttpServletResponse;
+
+import static com.example.meeTeam.member.dto.MemberRequest.*;
 
 public interface MemberService {
 
-    MemberDTO createMember(MemberRegisterRequestDto request);
-    Member findMemberByOAuthId(String oauthId, OAuthProviderType providerType);
-    TokenResponse localLogin(MemberRegisterRequestDto request, HttpServletResponse response);
+    MemberDTO createMember(MemberSignupRequestDto request);
+    TokenResponse localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response);
 }
