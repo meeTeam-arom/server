@@ -3,17 +3,11 @@ package com.example.meeTeam.member.dto;
 import com.example.meeTeam.member.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.Map;
 
-public record MemberDetails(Member member) implements UserDetails, OAuth2User {
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return Map.of();
-    }
+public record MemberDetails(Member member) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -50,8 +44,4 @@ public record MemberDetails(Member member) implements UserDetails, OAuth2User {
         return false;
     }
 
-    @Override
-    public String getName() {
-        return "";
-    }
 }

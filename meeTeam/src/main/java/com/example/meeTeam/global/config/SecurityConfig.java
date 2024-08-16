@@ -1,7 +1,5 @@
 package com.example.meeTeam.global.config;
 
-import com.example.meeTeam.global.auth.handler.OAuthFailureHandler;
-import com.example.meeTeam.global.auth.handler.OAuthSuccessHandler;
 import com.example.meeTeam.global.filter.AuthenticationTokenFilter;
 import com.example.meeTeam.global.filter.DefaultCorsFilter;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +22,6 @@ public class SecurityConfig {
     private final DefaultCorsFilter defaultCorsFilter;
     private final AuthenticationTokenFilter authenticationTokenFilter;
 
-
-    private final OAuthSuccessHandler oAuthSuccessHandler;
-    private final OAuthFailureHandler oAuthFailureHandler;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -42,12 +36,6 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::permitAll)
-                // OAuth2
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home")
-                        .successHandler(oAuthSuccessHandler)
-                        .failureHandler(oAuthFailureHandler))
                 .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 

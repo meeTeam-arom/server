@@ -6,13 +6,10 @@ import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.auth.token.vo.TokenResponse;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
-import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.OAuthProviderType;
 import com.example.meeTeam.member.converter.MemberConverter;
 import com.example.meeTeam.member.dto.MemberDTO;
-import com.example.meeTeam.member.dto.MemberDetails;
-import com.example.meeTeam.member.dto.MemberRegisterRequestDto;
 import com.example.meeTeam.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +23,7 @@ import java.util.Optional;
 
 import static com.example.meeTeam.global.exception.codes.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.meeTeam.global.properties.JwtProperties.*;
+import static com.example.meeTeam.member.dto.MemberRequest.*;
 
 
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public MemberDTO createMember(MemberRegisterRequestDto request) {
+    public MemberDTO createMember(MemberSignupRequestDto request) {
         if (memberRepository.existsByEmail(request.email())) {
             log.warn("[createMember] email: {}, {}", request.email(), ErrorCode.EXIST_EMAIL);
             throw new BaseException(ErrorCode.EXIST_EMAIL);
@@ -53,17 +51,7 @@ public class MemberServiceImpl implements MemberService {
         return MemberConverter.convert(member);
     }
 
-    @Transactional
-    public Member findMemberByOAuthId(String oauthId, OAuthProviderType providerType) {
-
-        return memberRepository.findMemberByOAuthIdAndProviderType(oauthId, providerType)
-                .orElseThrow(() -> {
-                    log.warn("[findMemberByOAuthId] id:{}, {}", oauthId, MEMBER_NOT_FOUND);
-                    return new BaseException(MEMBER_NOT_FOUND);
-                });
-    }
-
-    public TokenResponse localLogin(MemberRegisterRequestDto request, HttpServletResponse response){
+    public TokenResponse localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response){
         Member member = memberRepository.findMemberByEmail(request.email()).orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.password(), member.getMemberPassword())){
