@@ -1,9 +1,19 @@
-package com.example.meeTeam.chatroom;
+package com.example.meeTeam.chatroom.service;
 
+import com.example.meeTeam.chatroom.Chatroom;
+import com.example.meeTeam.chatroom.MemberChatroom;
+import com.example.meeTeam.chatroom.ProjectRole;
+import com.example.meeTeam.chatroom.dto.ChatroomDTO;
+import com.example.meeTeam.chatroom.repository.ChatroomRepository;
+import com.example.meeTeam.chatroom.repository.MemberChatroomRepository;
+import com.example.meeTeam.chatroom.repository.ProjectRoleRepository;
+import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.dto.MemberDetails;
+import com.example.meeTeam.member.dto.MemberRegisterRequestDto;
+import com.example.meeTeam.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import static com.example.meeTeam.global.exception.codes.ErrorCode.*;
 
 @Service
 @Slf4j
@@ -20,6 +32,7 @@ public class ChatroomServicelmpl implements ChatroomService{
     private final ChatroomRepository chatroomRepository;
     private final MemberChatroomRepository memberChatroomRepository;
     private final ProjectRoleRepository projectRoleRepository;
+    private final MemberRepository memberRepository;
 
    public  void test(ChatroomDTO.enterChatroom enterChatroom){
         System.out.println(enterChatroom.getCode());
@@ -29,6 +42,8 @@ public class ChatroomServicelmpl implements ChatroomService{
     public String calHalfwayPoint(ChatroomDTO chatroom){
        List<Member> members = getMemberByChatroomID(chatroom);
         int numberOfMembers = members.size();
+
+        if(numberOfMembers != chatroom.getTotalMember()) throw new MyExceptionHandler(SHORT_NUMBER_PEOPLE);
 
         List<Double> latitudeList = new ArrayList<>();
         List<Double> longitudeList = new ArrayList<>();
@@ -56,7 +71,7 @@ public class ChatroomServicelmpl implements ChatroomService{
     }
 
 
-    public String enterChatroom(ChatroomDTO.enterChatroom enterChatroom){
+    public String enterChatroomNByCode(ChatroomDTO.enterChatroom enterChatroom,MemberDetails memberDetails){
 
         //코드 맞는지 확인
         ChatroomDTO.chatroomCode code = new ChatroomDTO.chatroomCode();
@@ -69,10 +84,20 @@ public class ChatroomServicelmpl implements ChatroomService{
             return "enter the code correctly";
         }
 
-        System.out.println("Chatroom 있는거 확인 / enter");
-
         Chatroom chatroom = Chatroom.toEntity(chatroomDTO);
-        Member member = null;
+
+        Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+        if(!member.isPresent()){
+            System.out.println("member not found");
+        }else{
+            //현재 들어가려는 방에 이미 가입되어 있는지 확인 해야함.
+            List<MemberChatroom> membersByChatroomList = memberChatroomRepository.findByMember(member.get());
+            for(MemberChatroom memberChatroom : membersByChatroomList){
+                if(memberChatroom.getChatroom().getId()==chatroom.getId()){
+                    throw new MyExceptionHandler(ALREADY_ENTER_ROOM);
+                }
+            }
+        }
 
         //인원수 꽉 찬지 확인
         List<Member> members = getMemberByChatroomID(chatroomDTO);
@@ -82,12 +107,12 @@ public class ChatroomServicelmpl implements ChatroomService{
         System.out.println(numberOfMember+" "+numberOfTotalMember);
 
         if(numberOfMember >= numberOfTotalMember){
-            //인원수가 초과됨 예외 처리
+            throw new MyExceptionHandler(OVER_NUMBER_PEOPLE);
         }else if(numberOfMember < numberOfTotalMember){
 
             MemberChatroom memberChatroom = new MemberChatroom(
                     chatroom,
-                    member,
+                    member.get(),
                     null
             );
 
@@ -107,6 +132,49 @@ public class ChatroomServicelmpl implements ChatroomService{
 
         return "success";
     }
+
+    public ChatroomDTO.enterSuccessMessage enterChatroom(MemberDetails memberDetails, ChatroomDTO.chatroomId chatroomId){
+       //방에 들어가 있는지 확인이 필요하긴함.
+
+       ChatroomDTO.enterSuccessMessage successMessage = new ChatroomDTO.enterSuccessMessage();
+
+       Optional<Chatroom> chatroomById = chatroomRepository.findById(chatroomId.getId());
+        if(!chatroomById.isPresent()) throw new MyExceptionHandler(ROOM_NOT_FOUND);
+
+        Chatroom chatroom = chatroomById.get();
+        ChatroomDTO chatroomDTO = ChatroomDTO.toDTO(chatroom);
+        List<Member> members = getMemberByChatroomID(chatroomDTO);
+
+        List<String> memberNames = new ArrayList<>();
+        for(Member member : members){
+            memberNames.add(member.getMemberName());
+        }
+
+        successMessage.setChatroomName(chatroom.getChatroomName());
+        successMessage.setTotalMember(chatroom.getTotalMember());
+        successMessage.setMembers(memberNames);
+
+        Member teamLeader = getTeamLeaderByChatroom(chatroomDTO);
+        if(teamLeader != null) successMessage.setLeaderName(teamLeader.getMemberName());
+
+       return successMessage;
+    }
+
+    public Member getTeamLeaderByChatroom(ChatroomDTO chatroomDTO){
+        Chatroom chatroom = Chatroom.toEntity(chatroomDTO);
+        Member teamLeader = null;
+
+        List<MemberChatroom> memberChatroomList = memberChatroomRepository.findByChatroom(chatroom);
+        for(MemberChatroom memberChatroom : memberChatroomList){
+            Optional<ProjectRole> tmpRole = projectRoleRepository.findByMemberChatroom(memberChatroom);
+            if(tmpRole.isPresent()){
+                if(tmpRole.get().getRole() == ProjectRole.Role.LEADER) teamLeader=memberChatroom.getMember();
+            }
+        }
+
+        return teamLeader;
+    }
+
     public ChatroomDTO getChatroomByCode(ChatroomDTO.chatroomCode code){
 
         System.out.println("여기까지는 들어와짐 == " + code);
@@ -128,6 +196,9 @@ public class ChatroomServicelmpl implements ChatroomService{
 
     public String calAvailableDate(ChatroomDTO chatroom){
        List<Member> members = getMemberByChatroomID(chatroom);
+
+       if(members.size() != chatroom.getTotalMember()) throw new MyExceptionHandler(SHORT_NUMBER_PEOPLE);
+
         StringBuilder resultAvailableDate = new StringBuilder();
         List<String> availableDates = new ArrayList<>();
         int numberOfDigits = 48*7;
@@ -163,21 +234,18 @@ public class ChatroomServicelmpl implements ChatroomService{
 
             System.out.println(memberChatroom.getId());
 
-            ProjectRole tmpRole = Optional.ofNullable(projectRoleRepository.findByMemberChatroom(memberChatroom))
-                    .orElseGet(() -> null);
-
-            if(tmpRole != null){
-                projectRoleList.add(tmpRole);
-                if(tmpRole.isWantLeader() == true){
+            Optional<ProjectRole> tmpRole = projectRoleRepository.findByMemberChatroom(memberChatroom);
+            if(tmpRole.isPresent()){
+                projectRoleList.add(tmpRole.get());
+                if(tmpRole.get().isWantLeader() == true){
                     numOfWantLeader++;
-                    wantLeaderList.add(tmpRole);
+                    wantLeaderList.add(tmpRole.get());
                 }
             }
 
         }
 
         if(numOfWantLeader == 0){
-
             //random으로 돌리기
             Random random = new Random();
             random.setSeed(System.currentTimeMillis());
@@ -206,11 +274,6 @@ public class ChatroomServicelmpl implements ChatroomService{
                 projectRoleRepository.save(wantLeaderList.get(maxIndex));
             }
         }
-        //처음 저장할 때 리더 원하는 사람은 leader로 하자
-        //일단 멤버들 전원 값 가져옴.
-        // 찬성인 사람들 중에 기여도를 등수 토대로 1등부터 선택권 줌
-        // 만약에 다 안할 경우 랜덤값으로 한명만 넘김
-
         return "success";
     }
 
@@ -225,29 +288,27 @@ public class ChatroomServicelmpl implements ChatroomService{
         projectRoleRepository.save(role);
     }
 
-    public ChatroomDTO createChatroom(ChatroomDTO.chatroomCreate data){
-        Member member = null;
-        System.out.println("enter createChatroom");
+    public ChatroomDTO createChatroom(ChatroomDTO.chatroomCreate data, MemberDetails memberDetails){
 
         ChatroomDTO.chatroomCode chatroomCode = createChatroomCode();
+        Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
 
-        System.out.println("chatroomCode : "+chatroomCode.getCode());
-
-        //방만들기 누른 사람 member값을 가져와야함`
-        //방만든 멤버 memberChatroom 에 추가
+        if(!member.isPresent()){
+            throw new MyExceptionHandler(EMAIL_NOT_FOUND);
+        }
 
         Chatroom chatroom = new Chatroom(null,
                 data.getChatroomName(),
                 data.getTotoalMember(),
                 chatroomCode.getCode(),
                 new ArrayList<>(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                true
         );
-
 
         MemberChatroom memberChatroom = new MemberChatroom(
                 chatroom,
-                member,
+                member.get(),
             null
         );
 
@@ -324,7 +385,7 @@ public class ChatroomServicelmpl implements ChatroomService{
                 .orElseGet(() -> new ArrayList<>());
 
         if(memberChatroomsByMember.isEmpty()){
-            //예외처리 필요
+            throw new MyExceptionHandler(ROOM_NOT_FOUND);
         }
 
         List<ChatroomDTO> chatrooms = new ArrayList<>();
@@ -338,15 +399,14 @@ public class ChatroomServicelmpl implements ChatroomService{
 
 
     public List<Member> getMemberByChatroomID(ChatroomDTO chatroomDTO) {
+        //member값이 안가여와짐
 
         List<MemberChatroom> memberChatroomsByChatroom = Optional.ofNullable(memberChatroomRepository.findByChatroom(Chatroom.toEntity(chatroomDTO)))
                 .orElseGet(() -> new ArrayList<>());
 
-        List<MemberChatroom> test = new ArrayList<>();
-
 
         if(memberChatroomsByChatroom.isEmpty()){
-            //데이터 가져오는거 예외 처리 필요
+            throw new MyExceptionHandler(NOT_VALID_ERROR);
         }
 
         List<Member> members = new ArrayList<>();
@@ -357,4 +417,35 @@ public class ChatroomServicelmpl implements ChatroomService{
 
         return members;
     }
+
+    public String exitChatroom(ChatroomDTO chatroom){
+        //조원평가하기, 방사라져야함 두개 필요함.
+        //방 상태 불가로 만들기
+        chatroom.setStatus(false);
+        chatroomRepository.save(Chatroom.toEntity(chatroom));
+
+        return "success";
+    }
+
+    public List<ChatroomDTO.chatroomList> showChatroomListByMember(MemberDetails memberDetails){
+       Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+       if(!member.isPresent()){
+           throw new MyExceptionHandler(MEMBER_NOT_FOUND);
+       }
+        List<ChatroomDTO> chatroomByMember = getChatroomsByMember(member.get());
+
+        for(int i=chatroomByMember.size()-1;i>=0;i--){
+            if(chatroomByMember.get(i).isStatus() == false){
+                chatroomByMember.remove(i);
+            }
+        }
+
+        List<ChatroomDTO.chatroomList> chatroomList = new ArrayList<>();
+        for(ChatroomDTO chatroomDTO : chatroomByMember){
+            chatroomList.add(ChatroomDTO.toList(chatroomDTO));
+        }
+
+        return chatroomList;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.meeTeam.chatroom;
 
+import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.schedules.Schedule;
 import jakarta.persistence.*;
@@ -26,6 +27,8 @@ public class Chatroom extends BaseEntity {
 
     private String code;
 
+    private boolean status;
+
     @OneToMany(mappedBy = "chatroom")
     private List<MemberChatroom> memberChatroomList = new ArrayList<>();
 
@@ -33,13 +36,14 @@ public class Chatroom extends BaseEntity {
     private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
-    public Chatroom(Long id, String chatroomName, int totalMember, String code, List<MemberChatroom> memberChatroomList,List<Schedule> schedules) {
+    public Chatroom(Long id, String chatroomName, int totalMember, String code, List<MemberChatroom> memberChatroomList,List<Schedule> schedules,boolean status) {
         this.id = id;
         this.chatroomName = chatroomName;
         this.totalMember = totalMember;
         this.code = code;
         this.memberChatroomList = memberChatroomList;
         this.schedules = schedules;
+        this.status = status;
     }
 
     public static Chatroom toEntity(ChatroomDTO chatroomDTO){
@@ -49,7 +53,8 @@ public class Chatroom extends BaseEntity {
                 chatroomDTO.getTotalMember(),
                 chatroomDTO.getCode(),
                 chatroomDTO.getMemberChatroomList(),
-                chatroomDTO.getSchedules()
+                chatroomDTO.getSchedules(),
+                chatroomDTO.isStatus()
         );
     }
 

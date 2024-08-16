@@ -76,4 +76,9 @@ public class Member extends BaseEntity {
         this.longitude = longitude;
         this.availableDate = availableDate;
     }
+
+    public void updateMannerTemp(double memberMannerTemp){
+        this.memberMannerTemp = memberMannerTemp;
+    }
+
 }

@@ -19,4 +19,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "ON m.id = mo.member.id " +
             "WHERE mo.oauthId = :oauthId AND mo.oAuthProviderType = :providerType")
     Optional<Member> findMemberByOAuthIdAndProviderType(@Param("oauthId") String oauthId, @Param("providerType") OAuthProviderType providerType);
+
 }

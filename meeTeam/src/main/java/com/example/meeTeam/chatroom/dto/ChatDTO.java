@@ -1,4 +1,4 @@
-package com.example.meeTeam.chatroom;
+package com.example.meeTeam.chatroom.dto;
 
 import lombok.*;
 
