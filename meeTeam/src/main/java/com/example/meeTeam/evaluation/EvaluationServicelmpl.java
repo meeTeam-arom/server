@@ -42,7 +42,7 @@ public class EvaluationServicelmpl implements EvaluationService{
 
         evaluationScore = sumOfEvaluation / numOfList;
 
-        Optional<Member> memberByEmail = memberRepository.findMemberByEmail(member.getEmail());
+        Optional<Member> memberByEmail = memberRepository.findMemberByMemberEmail(member.getMemberEmail());
 
         memberByEmail.ifPresent(t ->{
                 t.updateMannerTemp(evaluationScore);
@@ -58,12 +58,12 @@ public class EvaluationServicelmpl implements EvaluationService{
         //두개 숫자 맞는지 확인
         if(numOfScore != numOfUsername) throw new MyExceptionHandler(NOT_VALID_ERROR);
 
-        Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+        Optional<Member> member = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
         if(!member.isPresent()) throw new MyExceptionHandler(MEMBER_NOT_FOUND);
 
         List<Member> targetMemberList = new ArrayList<>();
         for(int i=0;i<numOfUsername;i++){
-            Optional<Member> tmpMember = memberRepository.findMemberByEmail(evaluationDTO.getTargetMembersEmail().get(i));
+            Optional<Member> tmpMember = memberRepository.findMemberByMemberEmail(evaluationDTO.getTargetMembersEmail().get(i));
             if(tmpMember.isPresent()) targetMemberList.add(tmpMember.get());
             else throw new MyExceptionHandler(MEMBER_NOT_FOUND);
         }

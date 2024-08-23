@@ -13,7 +13,6 @@ import com.example.meeTeam.evaluation.EvaluationService;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
-import com.example.meeTeam.member.dto.MemberRegisterRequestDto;
 import com.example.meeTeam.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +85,7 @@ public class ChatroomServicelmpl implements ChatroomService{
 
         Chatroom chatroom = Chatroom.toEntity(chatroomDTO);
 
-        Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+        Optional<Member> member = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
         if(!member.isPresent()){
             System.out.println("member not found");
         }else{
@@ -291,7 +290,7 @@ public class ChatroomServicelmpl implements ChatroomService{
     public ChatroomDTO createChatroom(ChatroomRequestDTO.chatroomCreate data, MemberDetails memberDetails){
 
         ChatroomRequestDTO.chatroomCode chatroomCode = createChatroomCode();
-        Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+        Optional<Member> member = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
 
         if(!member.isPresent()){
             throw new MyExceptionHandler(EMAIL_NOT_FOUND);
@@ -441,7 +440,7 @@ public class ChatroomServicelmpl implements ChatroomService{
 
     public List<ChatroomResponseDTO.chatroomList> exitChatroom(MemberDetails memberDetails, ChatroomRequestDTO.chatroomId chatroomId){
 
-        Optional<Member> memberByEmail = memberRepository.findMemberByEmail(memberDetails.getUsername());
+        Optional<Member> memberByEmail = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
         Chatroom chatroom = getChatroomByRoomID(chatroomId);
         ChatroomDTO chatroomDTO = ChatroomDTO.toDTO(chatroom);
 
@@ -469,7 +468,7 @@ public class ChatroomServicelmpl implements ChatroomService{
     }
 
     public List<ChatroomResponseDTO.chatroomList> showChatroomListByMember(MemberDetails memberDetails){
-       Optional<Member> member = memberRepository.findMemberByEmail(memberDetails.getUsername());
+       Optional<Member> member = memberRepository.findMemberByMemberName(memberDetails.getUsername());
        if(!member.isPresent()){
            throw new MyExceptionHandler(MEMBER_NOT_FOUND);
        }

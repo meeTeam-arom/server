@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Boolean existsByEmail(String email);
+    Boolean existsByMemberEmail(String email);
 
-    Optional<Member> findMemberByEmail(String email);
+    Optional<Member> findMemberByMemberEmail(String email);
 
-    Optional<Member> findMemberByUsername(String username);
+    Optional<Member> findMemberByMemberName(String username);
 
     @Query("SELECT m " +
             "FROM Member m " +

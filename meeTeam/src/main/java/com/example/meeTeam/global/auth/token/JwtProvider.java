@@ -41,10 +41,10 @@ public class JwtProvider implements TokenProvider {
     }
 
     public AccessToken generateAccessToken(Member member) {
-        if (member.getEmail() == null || member.getEmail().isBlank()) {
+        if (member.getMemberEmail() == null || member.getMemberEmail().isBlank()) {
             return AccessToken.of("");
         }
-        return this.generateAccessToken(member.getEmail());
+        return this.generateAccessToken(member.getMemberEmail());
     }
 
     private AccessToken generateAccessToken(String email) {
@@ -62,10 +62,10 @@ public class JwtProvider implements TokenProvider {
     }
 
     public RefreshToken generateRefreshToken(Member member) {
-        if (member.getEmail() == null || member.getEmail().isBlank()) {
+        if (member.getMemberEmail() == null || member.getMemberEmail().isBlank()) {
             return RefreshToken.of("");
         }
-        return this.generateRefreshToken(member.getEmail());
+        return this.generateRefreshToken(member.getMemberEmail());
     }
 
     private RefreshToken generateRefreshToken(String email) {

@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public String createMember(MemberSignupRequestDto request) {
-        if (memberRepository.existsByEmail(request.email())) {
+        if (memberRepository.existsByMemberEmail(request.email())) {
             log.warn("[createMember] email: {}, {}", request.email(), ErrorCode.EXIST_EMAIL);
             throw new BaseException(ErrorCode.EXIST_EMAIL);
         }
@@ -58,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public MemberResponse.MemberTokenResDto localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response){
-        Member member = memberRepository.findMemberByEmail(request.email()).orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+        Member member = memberRepository.findMemberByMemberEmail(request.email()).orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.password(), member.getMemberPassword())){
             log.error("비밀번호 틀림");
