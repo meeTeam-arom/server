@@ -1,5 +1,6 @@
 package com.example.meeTeam.member.service;
 
+import com.example.meeTeam.global.auth.member.MemberAuthContext;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.member.Member;
@@ -24,6 +25,7 @@ public class MemberDetailsService implements UserDetailsService {
                     log.info("[loadUserByUsername] username:{}, {}", username, ErrorCode.MEMBER_NOT_FOUND);
                     return new BaseException(ErrorCode.MEMBER_NOT_FOUND);
                 });
-        return new MemberDetails(member);
+        MemberAuthContext ctx = MemberAuthContext.of(member);
+        return new MemberDetails(ctx);
     }
 }

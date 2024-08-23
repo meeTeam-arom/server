@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum OAuthProviderType {
-    GOOGLE("google"),
+    LOCAL("local"),
     KAKAO("kakao"),
     NAVER("naver");
 

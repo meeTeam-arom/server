@@ -3,10 +3,10 @@ package com.example.meeTeam.member;
 import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.member.dto.MemberRequest;
 import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
 import lombok.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,6 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-
     private String memberName;
 
     private String memberPassword;
@@ -31,8 +29,6 @@ public class Member extends BaseEntity {
     private String memberPhoneNum;
 
     private String memberEmail;
-
-    private String memberRole;
 
     private double memberMannerTemp;
 
@@ -45,6 +41,19 @@ public class Member extends BaseEntity {
     private double longitude;
 
     private String availableDate;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
+    @Getter
+    public enum Role {
+        USER("ROLE_USER"),
+        ADMIN("ROLE_ADMIN");
+
+        Role(String name) {}
+
+        private String name;
+    }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Orders> orders = new ArrayList<>();
@@ -60,13 +69,11 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(String email, String memberName, String memberPassword, String memberPhoneNum, String memberEmail, String memberRole, double memberMannerTemp, Long memberUsedCoins, Long memberEarnedCoins, double latitude, double longitude, String availableDate) {
-        this.email = email;
+    private Member(String memberName, String memberPassword, String memberPhoneNum, String memberEmail, double memberMannerTemp, Long memberUsedCoins, Long memberEarnedCoins, double latitude, double longitude, String availableDate) {
         this.memberName = memberName;
         this.memberPassword = memberPassword;
         this.memberPhoneNum = memberPhoneNum;
         this.memberEmail = memberEmail;
-        this.memberRole = memberRole;
         this.memberMannerTemp = memberMannerTemp;
         this.memberUsedCoins = memberUsedCoins;
         this.memberEarnedCoins = memberEarnedCoins;
@@ -75,8 +82,19 @@ public class Member extends BaseEntity {
         this.availableDate = availableDate;
     }
 
+    public static Member createMember(MemberRequest.MemberSignupRequestDto dto) {
+        return Member.builder()
+                .memberPassword(dto.password())
+                .memberEmail(dto.email())
+                .memberName(dto.name())
+                .memberPhoneNum(dto.phoneNumber())
+                .memberMannerTemp(36.5)
+                .memberEarnedCoins(0L)
+                .memberUsedCoins(0L)
+                .build();
+    }
+
     public void updateMannerTemp(double memberMannerTemp){
         this.memberMannerTemp = memberMannerTemp;
     }
-
 }
