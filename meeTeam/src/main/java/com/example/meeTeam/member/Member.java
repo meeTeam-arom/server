@@ -5,10 +5,7 @@ import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 

@@ -13,6 +13,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByEmail(String email);
 
+    Optional<Member> findMemberByUsername(String username);
+
     @Query("SELECT m " +
             "FROM Member m " +
             "JOIN m.memberOAuths mo " +
