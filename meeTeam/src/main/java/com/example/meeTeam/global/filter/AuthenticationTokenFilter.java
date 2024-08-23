@@ -29,14 +29,12 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
 
-//    @Value("${host.develop.api.ant-match.uri}")
     private List<String> antMatchURIs = new ArrayList<>();
 
     @PostConstruct
     public void init(){
         antMatchURIs.add("/signup");
         antMatchURIs.add("/login");
-        antMatchURIs.add("/login/oauth2/code/naver");
     }
 
 
@@ -55,17 +53,17 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             }
         }
 
-        String token = this.resolveToken(request);
+        String token = resolveToken(request);
 
         String aud = jwtProvider.parseAudience(token); // 토큰 Aud에 Member email을 기록하고 있음
 
-        MemberDetails userDetails = memberDetailsService.loadUserByUsername(aud); // memberId를 기반으로 조회
+        MemberDetails memberDetails = memberDetailsService.loadUserByUsername(aud); // memberId를 기반으로 조회
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(
-                userDetails,
+                memberDetails,
                 null,
-                userDetails.getAuthorities());
+                memberDetails.getAuthorities());
 
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

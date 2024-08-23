@@ -7,11 +7,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 import static com.example.meeTeam.member.dto.MemberRequest.*;
 
@@ -35,15 +35,7 @@ public class MemberController {
     }
 
     @PostMapping("/kakao-login")
-    public BaseResponse<?> kakaoLogin(@Valid @RequestBody MemberKakaoLoginRequestDto request, HttpServletResponse response){
-        log.info("카카오 로그인 진입");
-        return BaseResponse.onSuccess("dd");
+    public BaseResponse<?> kakaoLogin(@Valid @RequestBody MemberKakaoLoginRequestDto request, HttpServletResponse response) throws IOException {
+        return BaseResponse.onSuccess(memberService.kakaoLogin(request.userId(), response));
     }
-
-    @GetMapping("/hello")
-    public BaseResponse<?> aaa(@AuthenticationPrincipal MemberDetails member){
-        System.out.println(member.getUsername());
-        return BaseResponse.onSuccess("히히히");
-    }
-
 }

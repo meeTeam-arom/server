@@ -2,12 +2,15 @@ package com.example.meeTeam.member;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "member_oauth")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberOAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +29,17 @@ public class MemberOAuth {
     private OAuthProviderType oAuthProviderType;
 
     @Builder
-    public MemberOAuth(Long id, Member member, String oauthId, OAuthProviderType oAuthProviderType) {
-        this.id = id;
+    private MemberOAuth(Member member, String oauthId, OAuthProviderType oAuthProviderType) {
         this.member = member;
         this.oauthId = oauthId;
         this.oAuthProviderType = oAuthProviderType;
     }
 
-    public MemberOAuth() {
-
+    public static MemberOAuth createMemberOAuthWithSocialLogin(Member member, String oauthId, OAuthProviderType oAuthProviderType){
+        return MemberOAuth.builder()
+                .member(member)
+                .oauthId(oauthId)
+                .oAuthProviderType(oAuthProviderType)
+                .build();
     }
 }

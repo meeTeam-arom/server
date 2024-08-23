@@ -6,39 +6,10 @@ spring:
     password: meeteam123!!!
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
     database-platform: org.hibernate.dialect.MySQLDialect
 jwt:
   secret: ${JWT_SECRET}
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
-            client-authentication-method: POST
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
-            client-name: kakao
-            scope:
-              - profile_nickname
-          naver:
-            client-id: ${NAVER_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
-            client-authentication-method: POST
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
-            client-name: Naver
-            scope:
-              - name
-              - email
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id

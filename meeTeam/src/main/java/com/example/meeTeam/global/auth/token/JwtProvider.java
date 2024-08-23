@@ -6,7 +6,6 @@ import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.member.Member;
-import com.example.meeTeam.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -22,8 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
-import static com.example.meeTeam.global.properties.JwtProperties.ACCESS_TOKEN_EXPIRE_TIME;
-import static com.example.meeTeam.global.properties.JwtProperties.REFRESH_TOKEN_EXPIRE_TIME;
+import static com.example.meeTeam.global.properties.JwtProperties.*;
 
 @Getter
 @Component
@@ -49,13 +47,6 @@ public class JwtProvider implements TokenProvider {
         return this.generateAccessToken(member.getEmail());
     }
 
-    public AccessToken generateAccessToken(MemberDTO memberDTO) {
-        if (memberDTO.email() == null || memberDTO.email().isBlank()) {
-            return AccessToken.of("");
-        }
-        return this.generateAccessToken(memberDTO.email());
-    }
-
     private AccessToken generateAccessToken(String email) {
         String token = Jwts.builder()
                 .claim("type", "access")
@@ -75,12 +66,6 @@ public class JwtProvider implements TokenProvider {
             return RefreshToken.of("");
         }
         return this.generateRefreshToken(member.getEmail());
-    }
-    public RefreshToken generateRefreshToken(MemberDTO memberDTO) {
-        if (memberDTO.email() == null || memberDTO.email().isBlank()) {
-            return RefreshToken.of("");
-        }
-        return this.generateRefreshToken(memberDTO.email());
     }
 
     private RefreshToken generateRefreshToken(String email) {
@@ -122,20 +107,6 @@ public class JwtProvider implements TokenProvider {
         } catch (BaseException e) {
             log.warn("[parseAudience] {} :{}", ErrorCode.EXPIRED_ACCESS_TOKEN, token);
             throw new BaseException(ErrorCode.EXPIRED_ACCESS_TOKEN);
-        }
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .verifyWith(SECRET_KEY)
-                    .build()
-                    .parseSignedClaims(token);
-
-            return !claims.getPayload().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            log.warn("[validateToken] {}: {}", ErrorCode.INVALID_TOKEN, token);
-            return false;
         }
     }
 }
