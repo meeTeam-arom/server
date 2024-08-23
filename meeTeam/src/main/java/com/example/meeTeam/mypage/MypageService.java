@@ -14,12 +14,12 @@ public class MypageService {
     }
 
     public Member getProfile(String username) {
-        return memberRepository.findMemberByUsername(username)
+        return memberRepository.findMemberByMemberName(username)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
     public Member updateProfile(String username, Double latitude, Double longitude, String availableDate) {
-        Member member = memberRepository.findMemberByUsername(username)
+        Member member = memberRepository.findMemberByMemberName(username)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
         member.setLatitude(latitude);
