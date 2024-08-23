@@ -43,11 +43,11 @@ public class EvaluationServicelmpl implements EvaluationService{
         evaluationScore = sumOfEvaluation / numOfList;
 
         Optional<Member> memberByEmail = memberRepository.findMemberByEmail(member.getEmail());
+
         memberByEmail.ifPresent(t ->{
                 t.updateMannerTemp(evaluationScore);
             this.memberRepository.save(t);
         });
-        member.getMemberMannerTemp(); //여기에 변경하고 싶은데
     }
 
     public void doEvaluation(MemberDetails memberDetails,EvaluationDTO.doingEvaluationDTO evaluationDTO){
@@ -86,6 +86,11 @@ public class EvaluationServicelmpl implements EvaluationService{
     public void deleteEvaluation(EvaluationDTO evaluationDTO){
         Evaluation evaluation = new Evaluation(evaluationDTO.getEvaluationScore(),evaluationDTO.getMember(),evaluationDTO.getTargetMember(),evaluationDTO.isComplete());
         evaluationRepository.delete(evaluation);
+    }
+
+    public void beforeDoingEvaluation(Member member, Member targetMember){
+        Evaluation evaluation = new Evaluation(0,member,targetMember, false);
+        evaluationRepository.save(evaluation);
     }
 
 }

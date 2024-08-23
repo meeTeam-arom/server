@@ -29,12 +29,14 @@ public class Schedule extends BaseEntity {
 
     private boolean status;
 
+    private String deadline;
+
     @Builder
-    public Schedule(Long id,Chatroom chatroom, String title, String content, boolean status){
-        this.id = id;
+    public Schedule(Chatroom chatroom, String title, String content, boolean status, String deadline){
         this.chatroom = chatroom;
         this.title = title;
         this.content = content;
         this.status = status;
+        this.deadline = deadline;
     }
 }
