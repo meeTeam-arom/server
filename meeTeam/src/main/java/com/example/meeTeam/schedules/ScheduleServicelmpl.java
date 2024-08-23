@@ -2,6 +2,8 @@ package com.example.meeTeam.schedules;
 
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.dto.ChatroomDTO;
+import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
+import com.example.meeTeam.chatroom.service.ChatroomService;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -20,35 +22,38 @@ import static com.example.meeTeam.global.exception.codes.ErrorCode.SCHEDULE_NOT_
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ScheduleServicelmpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
+    private final ChatroomService chatroomService;
 
-    public void saveSchedule(ScheduleDTO scheduleDTO){
-        Schedule schedule = new Schedule(scheduleDTO.getId(),scheduleDTO.getChatroom(),scheduleDTO.getTitle(),scheduleDTO.getContent(),scheduleDTO.isStatus());
+    public ScheduleResponseDTO.listSchedule saveSchedule(ScheduleRequestDTO.saveSchedule scheduleDTO){
+        Schedule schedule = new Schedule(scheduleDTO.chatroom(),scheduleDTO.title(),scheduleDTO.content(),true, scheduleDTO.deadline());
         scheduleRepository.save(schedule);
+        return new ScheduleResponseDTO.listSchedule(schedule.getTitle(), schedule.getContent(), schedule.getDeadline());
     }
 
-    public List<ScheduleDTO> getAllSchedule(){
+    public List<ScheduleResponseDTO.listSchedule> getAllSchedule(){
         List<Schedule> scheduleList = Optional.ofNullable(scheduleRepository.findAll())
                 .orElseGet(() -> new ArrayList<>());
 
-        List<ScheduleDTO> scheduleDTOList = new ArrayList<>();
+        List<ScheduleResponseDTO.listSchedule> scheduleDTOList = new ArrayList<>();
         for(Schedule schedule : scheduleList){
-            scheduleDTOList.add(ScheduleDTO.toDTO(schedule));
+            scheduleDTOList.add(new ScheduleResponseDTO.listSchedule(schedule.getTitle(),schedule.getContent(),schedule.getDeadline()));
         }
 
         return scheduleDTOList;
     }
 
-    public List<ScheduleDTO> getScheduleByChatroom(ChatroomDTO chatroomDTO){
-        List<Schedule> scheduleList = Optional.ofNullable(scheduleRepository.findByChatroom(Chatroom.toEntity(chatroomDTO)))
+    public List<ScheduleResponseDTO.listSchedule> getScheduleByChatroom(ChatroomRequestDTO.chatroomId chatroomId){
+        Chatroom chatroom = chatroomService.getChatroomByRoomID(chatroomId);
+        List<Schedule> scheduleList = Optional.ofNullable(scheduleRepository.findByChatroom(Chatroom.toEntity(ChatroomDTO.toDTO(chatroom))))
                 .orElseGet(() -> new ArrayList<>());
 
         if(scheduleList.isEmpty()){
             throw new MyExceptionHandler(SCHEDULE_NOT_FOUND);
         }
 
-        List<ScheduleDTO> scheduleDTOList = new ArrayList<>();
+        List<ScheduleResponseDTO.listSchedule> scheduleDTOList = new ArrayList<>();
         for(Schedule schedule : scheduleList){
-            scheduleDTOList.add(ScheduleDTO.toDTO(schedule));
+            scheduleDTOList.add(new ScheduleResponseDTO.listSchedule(schedule.getTitle(),schedule.getContent(),schedule.getDeadline()));
         }
 
         return scheduleDTOList;

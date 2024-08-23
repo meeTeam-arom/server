@@ -19,9 +19,9 @@ public class EvaluationController {
     private final EvaluationService evaluationService;
 
     @PostMapping("/evaluation")
-    public BaseResponse<?> saveEvaluation(@AuthenticationPrincipal MemberDetails member, @RequestBody EvaluationDTO.doingEvaluationDTO evaluationDTO){
+    public BaseResponse<?> saveEvaluation(@AuthenticationPrincipal MemberDetails member, @RequestBody EvaluationDTO.doingEvaluationDTO evaluationDTO) {
         evaluationService.doEvaluation(member, evaluationDTO);
-        return BaseResponse.onSuccess("suceess");
+        return BaseResponse.onSuccess("success");
     }
 
 }

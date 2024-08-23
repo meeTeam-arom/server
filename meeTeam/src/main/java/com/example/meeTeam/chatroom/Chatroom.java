@@ -2,6 +2,7 @@ package com.example.meeTeam.chatroom;
 
 import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.global.entity.BaseEntity;
+import com.example.meeTeam.member.Member;
 import com.example.meeTeam.schedules.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,8 +36,12 @@ public class Chatroom extends BaseEntity {
     @OneToMany(mappedBy = "chatroom")
     private List<Schedule> schedules = new ArrayList<>();
 
+    //방 만든 사람도 추가해야할 것 같음.
+    @ManyToOne
+    private Member makePerson;
+
     @Builder
-    public Chatroom(Long id, String chatroomName, int totalMember, String code, List<MemberChatroom> memberChatroomList,List<Schedule> schedules,boolean status) {
+    public Chatroom(Long id, String chatroomName, int totalMember, String code, List<MemberChatroom> memberChatroomList,List<Schedule> schedules,boolean status,Member makePerson) {
         this.id = id;
         this.chatroomName = chatroomName;
         this.totalMember = totalMember;
@@ -44,6 +49,7 @@ public class Chatroom extends BaseEntity {
         this.memberChatroomList = memberChatroomList;
         this.schedules = schedules;
         this.status = status;
+        this.makePerson = makePerson;
     }
 
     public static Chatroom toEntity(ChatroomDTO chatroomDTO){
@@ -54,7 +60,8 @@ public class Chatroom extends BaseEntity {
                 chatroomDTO.getCode(),
                 chatroomDTO.getMemberChatroomList(),
                 chatroomDTO.getSchedules(),
-                chatroomDTO.isStatus()
+                chatroomDTO.isStatus(),
+                chatroomDTO.getMakePerson()
         );
     }
 
