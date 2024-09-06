@@ -4,7 +4,6 @@ import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.dto.MemberRequest;
-import com.example.meeTeam.orders.Orders;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -15,6 +15,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByMemberName(String username);
 
+    Optional<Member> findById(Long memberId);
+
     @Query("SELECT m " +
             "FROM Member m " +
             "JOIN m.memberOAuths mo " +

@@ -28,15 +28,10 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item orderItem;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Orders order;
-
     @Builder
-    public OrderItem(Long orderItemId, Item orderItem, Orders order, Long memberId, Long orderId, int price) {
+    public OrderItem(Long orderItemId, Item orderItem, Long memberId, Long orderId, int price) {
         this.orderItemId = orderItemId;
         this.orderItem = orderItem;
-        this.order = order;
         this.memberId = memberId;
         this.orderId = orderId;
         this.price = price;
