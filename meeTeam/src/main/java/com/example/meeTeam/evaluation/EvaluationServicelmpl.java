@@ -18,7 +18,7 @@ import static com.example.meeTeam.global.exception.codes.ErrorCode.*;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class EvaluationServicelmpl implements EvaluationService{
 
     private final EvaluationRepository evaluationRepository;

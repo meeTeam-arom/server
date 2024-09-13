@@ -7,14 +7,15 @@ import com.example.meeTeam.orders.service.OrderItemService;
 import com.example.meeTeam.orders.OrderItem;
 import com.example.meeTeam.orders.dto.OrderItemRequest;
 import com.example.meeTeam.orders.dto.OrderItemResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orderItems")
-
+@RequiredArgsConstructor
 public class OrderItemController {
-    @Autowired
+
     private OrderItemService OrderItemService;
 
     @PostMapping
@@ -24,7 +25,7 @@ public class OrderItemController {
         return BaseResponse.onSuccess(orderItemResponse);
     }
 
-    @PostMapping
+    @DeleteMapping
     public BaseResponse<OrderItemResponse> cancelPurchase(@RequestBody OrderItemRequest request) {
         OrderItemResponse orderItemResponse = OrderItemService.cancelPurchase(request.memberId(),request.orderItemId());
         return BaseResponse.onSuccess(orderItemResponse);

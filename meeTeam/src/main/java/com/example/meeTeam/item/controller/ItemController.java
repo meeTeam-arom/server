@@ -7,14 +7,15 @@ import com.example.meeTeam.item.dto.ItemRequest;
 import com.example.meeTeam.item.dto.ItemResponse;
 import com.example.meeTeam.item.dto.ItemUpdateRequest;
 import com.example.meeTeam.item.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 public class ItemController {
 
-    @Autowired
     private ItemService itemService;
 
     @PostMapping
@@ -24,11 +25,11 @@ public class ItemController {
         return BaseResponse.onSuccess(createdItemResponse);
     }
 
-    @PostMapping
-    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
-        ItemResponse item = itemService.getItemDetail(request);
-        return BaseResponse.onSuccess(item);
-    }
+//    @PostMapping
+//    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
+//        ItemResponse item = itemService.getItemDetail(request);
+//        return BaseResponse.onSuccess(item);
+//    }
 
     @PutMapping("/{id}")
     public BaseResponse<ItemResponse> updateItem(@PathVariable Long id, @RequestBody ItemUpdateRequest request) {
