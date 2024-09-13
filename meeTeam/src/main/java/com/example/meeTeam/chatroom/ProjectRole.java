@@ -1,15 +1,15 @@
 package com.example.meeTeam.chatroom;
 
+import com.example.meeTeam.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "role")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ProjectRole {
+@Setter
+public class ProjectRole extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +18,20 @@ public class ProjectRole {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private boolean isWantLeader;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_chatroom_id")
     private MemberChatroom memberChatroom;
 
     public enum Role{
+        LEADER, FOLLOWER
+    }
 
+    @Builder
+    public ProjectRole(Role role, boolean isWantLeader,MemberChatroom memberChatroom){
+        this.role = role;
+        this.isWantLeader = isWantLeader;
+        this.memberChatroom = memberChatroom;
     }
 }

@@ -1,13 +1,20 @@
 spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/meeteam
+#    username: meeteam
+#    password: meeteam123!!!
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/meeteam
-    username: meeteam
-    password: meeteam123!!!
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PWD}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-    database-platform: org.hibernate.spatial.dialect.mysql.MySQL5InnoDBSpatialDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
+jwt:
+  secret: ${JWT_SECRET}
