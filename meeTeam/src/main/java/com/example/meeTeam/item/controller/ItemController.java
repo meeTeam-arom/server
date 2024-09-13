@@ -25,11 +25,11 @@ public class ItemController {
         return BaseResponse.onSuccess(createdItemResponse);
     }
 
-//    @PostMapping
-//    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
-//        ItemResponse item = itemService.getItemDetail(request);
-//        return BaseResponse.onSuccess(item);
-//    }
+    @GetMapping
+    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
+        ItemResponse item = itemService.getItemDetail(request);
+        return BaseResponse.onSuccess(item);
+    }
 
     @PutMapping("/{id}")
     public BaseResponse<ItemResponse> updateItem(@PathVariable Long id, @RequestBody ItemUpdateRequest request) {
