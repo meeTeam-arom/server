@@ -9,6 +9,7 @@ import com.example.meeTeam.item.dto.ItemRequest;
 import com.example.meeTeam.item.dto.ItemResponse;
 import com.example.meeTeam.item.dto.ItemUpdateRequest;
 import com.example.meeTeam.item.repository.ItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ItemService {
-    @Autowired
+
     private ItemRepository itemRepository;
 
     // 새 상품 등록
@@ -47,24 +49,23 @@ public class ItemService {
 
     // 상품 정보 수정
     public Item updateItem(Long ID, ItemUpdateRequest request) {
-        itemRepository.findById(ID)
+
+        Item itemFound = itemRepository.findById(ID)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_ERROR));
 
-        Optional<Item> itemFound = itemRepository.findById(ID);
-
-        Long id = request.getId() != null ? request.getId() : itemFound.get().getId();
+        Long id = request.getId() != null ? request.getId() : itemFound.getId();
         ItemRequest newItem = updateValuesWith(request, itemFound, id);
         Item item = newItem.toEntity();
 
         itemRepository.save(item);
         return item;
     }
-    private static ItemRequest updateValuesWith(ItemUpdateRequest request, Optional<Item> itemFound, Long id) {
-        int price = request.getPrice() != 0 ? request.getPrice() : itemFound.get().getPrice();
-        String name = request.getName() != null ? request.getName() : itemFound.get().getName();
-        String description = request.getDescription() != null ? request.getDescription() : itemFound.get().getDescription();
-        Image image = request.getImage() != null ? request.getImage() : itemFound.get().getImage();
-        String imageUrl = request.getImageUrl() != null ? request.getImageUrl() : itemFound.get().getImageUrl();
+    private ItemRequest updateValuesWith(ItemUpdateRequest request, Item itemFound, Long id) {
+        int price = request.getPrice() != 0 ? request.getPrice() : itemFound.getPrice();
+        String name = request.getName() != null ? request.getName() : itemFound.getName();
+        String description = request.getDescription() != null ? request.getDescription() : itemFound.getDescription();
+        Image image = request.getImage() != null ? request.getImage() : itemFound.getImage();
+        String imageUrl = request.getImageUrl() != null ? request.getImageUrl() : itemFound.getImageUrl();
 
         return new ItemRequest(id, price, name, description, image, imageUrl);
     }

@@ -5,8 +5,6 @@ import com.example.meeTeam.orders.OrderItem;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
 public record OrderItemRequest (
         Long orderItemId,
         Item orderItem,

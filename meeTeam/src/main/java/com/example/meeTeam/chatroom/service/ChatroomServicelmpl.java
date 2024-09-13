@@ -28,7 +28,7 @@ import static com.example.meeTeam.global.exception.codes.ErrorCode.*;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class ChatroomServicelmpl implements ChatroomService{
 
     private final ChatroomRepository chatroomRepository;

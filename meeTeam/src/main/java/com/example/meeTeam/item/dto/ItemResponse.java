@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Builder
 public record ItemResponse (
         Long itemId, int itemPrice, String itemName,

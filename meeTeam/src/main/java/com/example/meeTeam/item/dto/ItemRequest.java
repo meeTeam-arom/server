@@ -5,7 +5,7 @@ import com.example.meeTeam.item.Item;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
+
 public record ItemRequest(
         Long id,
         int price,

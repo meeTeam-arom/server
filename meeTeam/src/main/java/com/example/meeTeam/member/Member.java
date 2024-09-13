@@ -4,6 +4,7 @@ import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.dto.MemberRequest;
+import com.example.meeTeam.orders.OrderItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,7 +56,7 @@ public class Member extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Orders> orders = new ArrayList<>();
+    private List<OrderItem> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<MemberChatroom> memberChatroomList = new ArrayList<>();

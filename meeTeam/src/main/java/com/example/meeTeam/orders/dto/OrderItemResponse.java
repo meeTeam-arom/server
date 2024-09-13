@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.Builder;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Builder
-
 public record OrderItemResponse (
         Long orderItemId,
         Item orderItem,
@@ -31,7 +28,7 @@ public record OrderItemResponse (
     public static OrderItemResponse fromEntity(OrderItem orderItem) {
         return OrderItemResponse.builder()
                 .orderItemId(orderItem.getOrderItemId())
-                .orderItem(orderItem.getOrderItem())
+                .orderItem(orderItem.getItem())
                 .memberId(orderItem.getMemberId())
                 .orderId(orderItem.getOrderId())
                 .build();

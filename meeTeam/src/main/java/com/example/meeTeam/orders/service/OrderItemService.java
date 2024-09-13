@@ -46,7 +46,7 @@ public class OrderItemService {
         itemRepository.save(item);
 
         // 구매 아이템 저장
-        OrderItemRequest orderItemRequest = new OrderItemRequest(orderItem.getOrderItemId(), orderItem.getOrderItem(),
+        OrderItemRequest orderItemRequest = new OrderItemRequest(orderItem.getOrderItemId(), orderItem.getItem(),
                 orderItem.getMemberId(), orderItem.getOrderId(), orderItem.getPrice()); //
 
         return orderItemRepository.save(orderItem);
