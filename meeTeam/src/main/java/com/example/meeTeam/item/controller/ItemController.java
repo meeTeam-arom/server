@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @PostMapping
     public BaseResponse<ItemResponse> createItem(@RequestBody ItemRequest request) {
