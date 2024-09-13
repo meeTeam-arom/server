@@ -19,8 +19,9 @@ public class ItemController {
 
     @PostMapping
     public BaseResponse<ItemResponse> createItem(@RequestBody ItemRequest request) {
-        ItemResponse createdItem = ItemResponse.fromRequest(request);
-        return BaseResponse.onSuccess(createdItem);
+        ItemResponse createdItemResponse = ItemResponse.fromEntity(
+                itemService.createItem(request.id(), request.price(), request.name(), request.description(), request.image(), request.imageUrl()));
+        return BaseResponse.onSuccess(createdItemResponse);
     }
 
     @PostMapping
