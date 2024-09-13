@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @PostMapping
     public BaseResponse<ItemResponse> createItem(@RequestBody ItemRequest request) {
@@ -25,11 +25,11 @@ public class ItemController {
         return BaseResponse.onSuccess(createdItemResponse);
     }
 
-//    @PostMapping
-//    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
-//        ItemResponse item = itemService.getItemDetail(request);
-//        return BaseResponse.onSuccess(item);
-//    }
+    @GetMapping
+    public BaseResponse<ItemResponse> getItemDetail(@RequestBody ItemFindRequest request) {
+        ItemResponse item = itemService.getItemDetail(request);
+        return BaseResponse.onSuccess(item);
+    }
 
     @PutMapping("/{id}")
     public BaseResponse<ItemResponse> updateItem(@PathVariable Long id, @RequestBody ItemUpdateRequest request) {
