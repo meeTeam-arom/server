@@ -19,8 +19,8 @@ public class ChatroomDTO {
     private String chatroomName;
     private int totalMember;
     private String code;
-    private List<MemberChatroom> memberChatroomList = new ArrayList<>();
-    private List<Schedule> schedules = new ArrayList<>();
+    private List<MemberChatroom> memberChatroomList;
+    private List<Schedule> schedules;
     private boolean status;
     private Member makePerson;
 
