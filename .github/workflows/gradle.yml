@@ -20,9 +20,9 @@ jobs:
       - name: ssh 원격 접속
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secretes.EC2_HOST}}
-          username: ${{ secretes.EC2_USERNAME}}
-          key: ${{ secretes.EC2_PRIVATE_KEY}}
+          host: ${{ secrets.EC2_HOST}}
+          username: ${{ secrets.EC2_USERNAME}}
+          key: ${{ secrets.EC2_PRIVATE_KEY}}
           script_stop: true
           script: |
             cd /home/ubuntu/server
