@@ -19,14 +19,19 @@ jobs:
     steps:
       - name: ssh 원격 접속
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          APPLICATION_DEV_YML: ${{secrets.APPLICATION_DEV_YML}}
         with:
           host: ${{ secrets.EC2_HOST}}
           username: ${{ secrets.EC2_USERNAME}}
           key: ${{ secrets.EC2_PRIVATE_KEY}}
+          envs: APPLICATION_DEV
           script_stop: true
           script: |
-            cd /home/ubuntu/server
+            cd /home/ubuntu/server/meeTeam
+            rm -rf src/main/resources/application-dev.yml
             git pull origin main
+            echo "$APPLICATION_DEV" > src/main/resources/application-dev.yml
             ./gradlew clean build
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log > 2&1 &
