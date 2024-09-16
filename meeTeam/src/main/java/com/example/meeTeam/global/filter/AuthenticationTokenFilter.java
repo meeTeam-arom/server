@@ -6,6 +6,7 @@ import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.service.MemberDetailsService;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,47 +32,44 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
 
-    private List<String> antMatchURIs = new ArrayList<>();
-
-    @PostConstruct
-    public void init(){
-        antMatchURIs.add("/signup");
-        antMatchURIs.add("/login");
-    }
-
+    @Resource
+    private SecurityContextRepository securityContextRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // 토큰 검증을 하지 않아야 하는 Path에 대한 예외 처리
-        String path = request.getRequestURI();
-        log.info("path : {}", path);
-        for (String antMatchURI : antMatchURIs) {
-            if (path.startsWith(antMatchURI)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+
+        String jwtHeader = request.getHeader("Authorization");
+        if (jwtHeader == null || !jwtHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        log.info("멤버 인증 시작!!");
 
         String token = resolveToken(request);
 
         String aud = jwtProvider.parseAudience(token); // 토큰 Aud에 Member email을 기록하고 있음
 
-        MemberDetails memberDetails = memberDetailsService.loadUserByUsername(aud); // memberId를 기반으로 조회
+        MemberDetails userDetails = memberDetailsService.loadUserByUsername(aud); // memberId를 기반으로 조회
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(
-                memberDetails,
+                userDetails,
                 null,
-                memberDetails.getAuthorities());
+                userDetails.getAuthorities());
 
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, request, response);
+
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
-
     }
 
     private String resolveToken(HttpServletRequest httpServletRequest) {
