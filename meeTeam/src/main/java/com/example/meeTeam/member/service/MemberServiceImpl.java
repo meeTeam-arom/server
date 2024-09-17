@@ -1,5 +1,6 @@
 package com.example.meeTeam.member.service;
 
+import com.example.meeTeam.global.auth.member.MemberAuthContext;
 import com.example.meeTeam.global.auth.token.JwtProvider;
 import com.example.meeTeam.global.auth.token.vo.AccessToken;
 import com.example.meeTeam.global.auth.token.vo.RefreshToken;
@@ -37,6 +38,7 @@ import static com.example.meeTeam.member.dto.MemberRequest.*;
 @Slf4j
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
+
     private final MemberRepository memberRepository;
     private final MemberOAuthRepository memberOAuthRepository;
     private final PasswordEncoder passwordEncoder;
@@ -48,9 +50,9 @@ public class MemberServiceImpl implements MemberService {
             log.warn("[createMember] email: {}, {}", request.email(), ErrorCode.EXIST_EMAIL);
             throw new BaseException(ErrorCode.EXIST_EMAIL);
         }
-
         Member member = Member.createMember(request);
-        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuthWithSocialLogin(member, UUID.randomUUID().toString(), OAuthProviderType.LOCAL);
+        member.encodePassword(passwordEncoder.encode(request.password()));
+        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuthWithSocialLogin(member, UUID.randomUUID().toString(), request.providerType());
         member.getMemberOAuths().add(memberOAuth);
         memberRepository.save(member);
 
@@ -83,6 +85,17 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponse.MemberTokenResDto.from(getTokenResponse(response, member));
     }
 
+    public Boolean checkDuplicateId(String id) {
+        return memberRepository.findMemberByMemberEmail(id).isPresent();
+    }
+
+    public String getMemberAdditionInfo(MemberAuthContext context, MemberAdditionInfoRequestDto request) {
+        Member member = memberRepository.findMemberByMemberEmail(context.email())
+                .orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+        member.addMemberAdditionInfo(request);
+        return "설정 완료";
+    }
+
 
     @NotNull
     private TokenResponse getTokenResponse(HttpServletResponse response, Member member) {
@@ -92,6 +105,8 @@ public class MemberServiceImpl implements MemberService {
         response.addHeader(JWT_ACCESS_TOKEN_HEADER_NAME, JWT_ACCESS_TOKEN_TYPE + accessToken.token());
 
         Cookie refreshTokenCookie = new Cookie(JWT_REFRESH_TOKEN_COOKIE_NAME, refreshToken.token());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_EXPIRE_TIME);
         refreshTokenCookie.setPath("/");
         response.addCookie(refreshTokenCookie);

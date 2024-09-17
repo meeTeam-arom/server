@@ -82,16 +82,25 @@ public class Member extends BaseEntity {
         this.availableDate = availableDate;
     }
 
+    public void encodePassword(String encodedPassword){
+        this.memberPassword = encodedPassword;
+    }
+
     public static Member createMember(MemberRequest.MemberSignupRequestDto dto) {
         return Member.builder()
                 .memberPassword(dto.password())
                 .memberEmail(dto.email())
-                .memberName(dto.name())
                 .memberPhoneNum(dto.phoneNumber())
                 .memberMannerTemp(36.5)
                 .memberEarnedCoins(0L)
                 .memberUsedCoins(0L)
                 .build();
+    }
+
+    public void addMemberAdditionInfo(MemberRequest.MemberAdditionInfoRequestDto additionInfo) {
+        this.memberName = additionInfo.name();
+        this.latitude = additionInfo.latitude();
+        this.longitude = additionInfo.longitude();
     }
 
     public void updateMannerTemp(double memberMannerTemp){
