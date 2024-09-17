@@ -1,13 +1,11 @@
 package com.example.meeTeam.evaluation;
 
 import com.example.meeTeam.global.handler.MyExceptionHandler;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.repository.MemberRepository;
-import com.example.meeTeam.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

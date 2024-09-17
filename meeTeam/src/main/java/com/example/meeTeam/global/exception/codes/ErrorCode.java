@@ -8,6 +8,13 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode implements BaseCode {
+    NOT_VALID_ERROR(HttpStatus.NOT_FOUND, "G011", "잘못됨"),
+
+    //상품 없음
+    ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "ITEM-0000", "아이템이 존재하지 않습니다."),
+
+    //방이 없음
+    NO_CHATROOM_PARTICIPATED(HttpStatus.BAD_REQUEST, "CHATROOM-0000", "참여 중인 채팅방이 존재하지 않습니다"),
 
     //인원 초과됨
     OVER_NUMBER_PEOPLE(HttpStatus.BAD_REQUEST,"G013","인원 수가 초과되어 입장 불가능"),

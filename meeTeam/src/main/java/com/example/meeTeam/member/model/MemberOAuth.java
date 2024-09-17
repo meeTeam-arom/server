@@ -1,4 +1,4 @@
-package com.example.meeTeam.member;
+package com.example.meeTeam.member.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

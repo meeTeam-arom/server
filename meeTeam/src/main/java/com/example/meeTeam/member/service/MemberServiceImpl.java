@@ -6,9 +6,8 @@ import com.example.meeTeam.global.auth.token.vo.AccessToken;
 import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.auth.token.vo.TokenResponse;
 import com.example.meeTeam.global.exception.BaseException;
-import com.example.meeTeam.member.Member;
-import com.example.meeTeam.member.MemberOAuth;
-import com.example.meeTeam.member.OAuthProviderType;
+import com.example.meeTeam.member.model.Member;
+import com.example.meeTeam.member.model.MemberOAuth;
 import com.example.meeTeam.member.dto.MemberResponse;
 import com.example.meeTeam.member.repository.MemberOAuthRepository;
 import com.example.meeTeam.member.repository.MemberRepository;
@@ -25,7 +24,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.example.meeTeam.global.exception.codes.ErrorCode.*;
 import static com.example.meeTeam.global.properties.JwtProperties.*;
@@ -48,16 +46,15 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = Member.createMember(request);
         member.encodePassword(passwordEncoder.encode(request.password()));
-        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuthWithSocialLogin(
-                member,
-                UUID.randomUUID().toString(),
-                request.providerType()
-        );
-        member.getMemberOAuths().add(memberOAuth);
         memberRepository.save(member);
+
+        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuth(request.loginType());
+        memberOAuth.updateMemberOAuthBy(member);
+        memberOAuthRepository.save(memberOAuth);
         return "회원가입이 완료됐습니다.";
     }
 
+    @Transactional
     public MemberResponse.MemberTokenResDto localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response){
 
         Member member = memberRepository
@@ -72,6 +69,7 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponse.MemberTokenResDto.from(getTokenResponse(response, member));
     }
 
+    @Transactional
     public MemberResponse.MemberTokenResDto kakaoLogin(Long id, HttpServletResponse response) throws IOException{
 
         Optional<MemberOAuth> optionalMemberOAuth = memberOAuthRepository.findById(id);
@@ -90,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
 
     public Boolean checkDuplicateId(String email) {
 
-        if(!memberRepository.existsByMemberEmail(email))
+        if(memberRepository.existsByMemberEmail(email))
             throw new BaseException(EXIST_EMAIL);
         return true;
     }

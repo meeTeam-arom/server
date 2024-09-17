@@ -1,4 +1,4 @@
-package com.example.meeTeam.member;
+package com.example.meeTeam.member.model;
 
 import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.evaluation.Evaluation;

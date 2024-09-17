@@ -6,7 +6,7 @@ import com.example.meeTeam.chatroom.ProjectRole;
 import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
 import com.example.meeTeam.chatroom.dto.ChatroomResponseDTO;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
 
 import java.util.List;

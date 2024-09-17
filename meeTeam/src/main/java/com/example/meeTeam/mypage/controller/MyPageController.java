@@ -1,7 +1,8 @@
-package com.example.meeTeam.mypage;
+package com.example.meeTeam.mypage.controller;
 
 import com.example.meeTeam.global.exception.BaseResponse;
 import com.example.meeTeam.member.dto.MemberDetails;
+import com.example.meeTeam.mypage.service.MyPageService;
 import com.example.meeTeam.mypage.dto.MyPageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

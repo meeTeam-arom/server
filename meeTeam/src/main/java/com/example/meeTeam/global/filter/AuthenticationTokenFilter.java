@@ -29,17 +29,17 @@ import java.util.List;
 @Slf4j
 @Component
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
+
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
-
-    @Resource
-    private SecurityContextRepository securityContextRepository;
+    private final SecurityContextRepository securityContextRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        log.info(request.getRequestURI());
 
         String jwtHeader = request.getHeader("Authorization");
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer ")) {

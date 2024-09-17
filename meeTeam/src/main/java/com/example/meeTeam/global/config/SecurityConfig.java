@@ -1,9 +1,6 @@
 package com.example.meeTeam.global.config;
 
-import com.example.meeTeam.global.auth.token.JwtProvider;
 import com.example.meeTeam.global.filter.AuthenticationTokenFilter;
-import com.example.meeTeam.global.filter.DefaultCorsFilter;
-import com.example.meeTeam.member.service.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,34 +11,28 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.DelegatingSecurityContextRepository;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtProvider jwtProvider;
-    private final MemberDetailsService memberDetailsService;
+    private final AuthenticationTokenFilter authenticationTokenFilter;
+    private final SecurityContextRepositoryImpl securityContextRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/", "testPage", "/home/**", "/signup", "/index/**", "/index.js", "/favicon.ico", "/login/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/", "/testPage", "/home/**", "/signup/**", "/index/**", "/index.js", "/favicon.ico", "/login/**").permitAll()
                         .anyRequest().authenticated())
                 .securityContext((securityContext) -> {
                     securityContext
-                            .securityContextRepository(securityContextRepository())
+                            .securityContextRepository(securityContextRepository.securityContextRepository())
                             .requireExplicitSave(true);
                 })
                 .csrf(AbstractHttpConfigurer::disable)
@@ -49,24 +40,10 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::permitAll)
-                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 
         return http.build();
-    }
-
-
-    @Bean
-    public AuthenticationTokenFilter jwtAuthFilter() {
-        return new AuthenticationTokenFilter(jwtProvider, memberDetailsService);
-    }
-
-    @Bean
-    public SecurityContextRepository securityContextRepository(){
-        return new DelegatingSecurityContextRepository(
-                new RequestAttributeSecurityContextRepository(),
-                new HttpSessionSecurityContextRepository()
-        );
     }
 
     @Bean

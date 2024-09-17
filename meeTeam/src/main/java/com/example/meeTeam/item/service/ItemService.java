@@ -25,7 +25,7 @@ public class ItemService {
     // 새 상품 등록
     public Item createItem(Long id, int price, String name, String description, Image image, String imageUrl) {
         itemRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         ItemRequest newItem = new ItemRequest(id, price, name, description, image, imageUrl);
         Item item = newItem.toEntity();
@@ -38,7 +38,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemResponse getItemDetail(ItemFindRequest request) {
         itemRepository.findById(request.getId())
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         Optional<Item> foundItem = itemRepository.findById(request.getId());
         ItemResponse item = new ItemResponse(foundItem.get().getId(), foundItem.get().getPrice(), foundItem.get().getName(),
@@ -51,7 +51,7 @@ public class ItemService {
     public Item updateItem(Long ID, ItemUpdateRequest request) {
 
         Item itemFound = itemRepository.findById(ID)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         Long id = request.getId() != null ? request.getId() : itemFound.getId();
         ItemRequest newItem = updateValuesWith(request, itemFound, id);
@@ -73,7 +73,7 @@ public class ItemService {
     // 상품 삭제
     public Long deleteItem(Long id) {
         itemRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         itemRepository.deleteById(id);
         return id;

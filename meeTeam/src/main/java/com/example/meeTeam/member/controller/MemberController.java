@@ -34,20 +34,20 @@ public class MemberController {
         return BaseResponse.onSuccess(memberService.checkDuplicateId(email));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login/local")
     public BaseResponse<?> login(@Valid @RequestBody MemberLocalLoginRequestDto request, HttpServletResponse response){
         return BaseResponse.onSuccess(memberService.localLogin(request, response));
     }
 
-    @PostMapping("/kakao-login")
+    @PostMapping("/login/kakao")
     public BaseResponse<?> kakaoLogin(@Valid @RequestBody MemberKakaoLoginRequestDto request, HttpServletResponse response) throws IOException {
         return BaseResponse.onSuccess(memberService.kakaoLogin(request.userId(), response));
     }
 
     @PostMapping("/user-info")
-    public BaseResponse<?> postUserInfoAfterSignUp(@AuthenticationPrincipal MemberAuthContext context,
+    public BaseResponse<?> postUserInfoAfterSignUp(@AuthenticationPrincipal MemberDetails principal,
                                                    @Valid @RequestBody MemberAdditionInfoRequestDto request){
-        return BaseResponse.onSuccess(memberService.getMemberAdditionInfo(context,  request));
+        return BaseResponse.onSuccess(memberService.getMemberAdditionInfo(principal.context(),  request));
     }
 
 }

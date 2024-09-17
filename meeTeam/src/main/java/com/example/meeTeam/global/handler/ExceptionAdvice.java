@@ -32,6 +32,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler
     public ResponseEntity<Object> validation(MethodArgumentNotValidException e) {
+        log.error(e.getBindingResult().getFieldErrors().get(0).toString());
         String message = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         BaseResponse<?> baseResponse = BaseResponse.onFailure(ErrorCode.BINDING_ERROR.getCode(), message, null);
         return handleExceptionInternal(baseResponse);
@@ -44,7 +45,8 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler
     public ResponseEntity<Object> exception(Exception e) {
-        ErrorCode errorCode = ErrorCode._INTERNAL_SERVER_ERROR;
+        log.error(e.getMessage());
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         BaseResponse<?> baseResponse = BaseResponse.onFailure(errorCode.getCode(), errorCode.getMessage(), null);
         return handleExceptionInternal(baseResponse);
     }

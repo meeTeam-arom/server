@@ -4,7 +4,7 @@ import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.item.Item;
 import com.example.meeTeam.item.repository.ItemRepository;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.repository.MemberRepository;
 import com.example.meeTeam.orders.OrderItem;
 import com.example.meeTeam.orders.dto.OrderItemRequest;
@@ -30,13 +30,13 @@ public class OrderItemService {
     @Transactional
     public OrderItem purchaseItem(Long orderItemId, Long memberId, Long itemId) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new BaseException(ErrorCode.IO_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(ErrorCode.IO_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new BaseException(ErrorCode.IO_ERROR));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
         // 회원의 잔액 갱신
         member.setMemberEarnedCoins(member.getMemberEarnedCoins() - item.getPrice());
@@ -56,18 +56,18 @@ public class OrderItemService {
     public OrderItemResponse cancelPurchase(Long memberId, Long orderItemId) {
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new BaseException(ErrorCode._BAD_REQUEST));
+                .orElseThrow(() -> new BaseException(ErrorCode.ITEM_NOT_FOUND));
 
-        if (!orderItem.getMemberId().equals(memberId)) {
-            throw new BaseException(ErrorCode.REQUEST_BODY_MISSING_ERROR);
-            // 해당 member 가 구매 취소하고자 하는 item 을 구매한 적 없음
-        }
+//        if (!orderItem.getMemberId().equals(memberId)) {
+//            throw new BaseException(ErrorCode.REQUEST_BODY_MISSING_ERROR);
+//            // 해당 member 가 구매 취소하고자 하는 item 을 구매한 적 없음
+//        }
 
         // 사용자의 잔액 원상복구
         Optional<Member> mb = memberRepository.findById(memberId);
 
         if (mb.isEmpty()) {
-            throw new BaseException(ErrorCode.IO_ERROR);
+            throw new BaseException(ErrorCode.MEMBER_NOT_FOUND);
         }
         Member member = mb.get();
         member.setMemberEarnedCoins(member.getMemberEarnedCoins() + orderItem.getPrice());

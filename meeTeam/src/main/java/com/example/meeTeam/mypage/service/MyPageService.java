@@ -1,8 +1,7 @@
-package com.example.meeTeam.mypage;
+package com.example.meeTeam.mypage.service;
 
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
-import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.repository.MemberRepository;
 import com.example.meeTeam.mypage.dto.MyPageRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ public class MyPageService {
     }
 
     public void updateProfile(String email, MyPageRequest.MyPageUpdateRequestDto request) {
-        Member member = memberRepository.findMemberByMemberEmail(email)
-                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-        member.updateMemberMyPage(request);
+        memberRepository.findMemberByMemberEmail(email)
+                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND))
+                .updateMemberMyPage(request);
     }
 }
