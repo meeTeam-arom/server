@@ -6,7 +6,6 @@ import com.example.meeTeam.global.auth.token.vo.AccessToken;
 import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.auth.token.vo.TokenResponse;
 import com.example.meeTeam.global.exception.BaseException;
-import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.MemberOAuth;
 import com.example.meeTeam.member.OAuthProviderType;
@@ -28,7 +27,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.example.meeTeam.global.exception.codes.ErrorCode.MEMBER_NOT_FOUND;
+import static com.example.meeTeam.global.exception.codes.ErrorCode.*;
 import static com.example.meeTeam.global.properties.JwtProperties.*;
 import static com.example.meeTeam.member.dto.MemberRequest.*;
 
@@ -46,31 +45,35 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public String createMember(MemberSignupRequestDto request) {
-        if (memberRepository.existsByMemberEmail(request.email())) {
-            log.warn("[createMember] email: {}, {}", request.email(), ErrorCode.EXIST_EMAIL);
-            throw new BaseException(ErrorCode.EXIST_EMAIL);
-        }
+
         Member member = Member.createMember(request);
         member.encodePassword(passwordEncoder.encode(request.password()));
-        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuthWithSocialLogin(member, UUID.randomUUID().toString(), request.providerType());
+        MemberOAuth memberOAuth = MemberOAuth.createMemberOAuthWithSocialLogin(
+                member,
+                UUID.randomUUID().toString(),
+                request.providerType()
+        );
         member.getMemberOAuths().add(memberOAuth);
         memberRepository.save(member);
-
         return "회원가입이 완료됐습니다.";
     }
 
     public MemberResponse.MemberTokenResDto localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response){
-        Member member = memberRepository.findMemberByMemberEmail(request.email()).orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+
+        Member member = memberRepository
+                .findMemberByMemberEmail(request.email())
+                .orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.password(), member.getMemberPassword())){
             log.error("비밀번호 틀림");
-            throw new BaseException(ErrorCode.PASSWORD_ERROR);
+            throw new BaseException(PASSWORD_ERROR);
         }
 
         return MemberResponse.MemberTokenResDto.from(getTokenResponse(response, member));
     }
 
     public MemberResponse.MemberTokenResDto kakaoLogin(Long id, HttpServletResponse response) throws IOException{
+
         Optional<MemberOAuth> optionalMemberOAuth = memberOAuthRepository.findById(id);
         if (optionalMemberOAuth.isEmpty()) {
             response.setContentType("application/json");
@@ -85,20 +88,24 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponse.MemberTokenResDto.from(getTokenResponse(response, member));
     }
 
-    public Boolean checkDuplicateId(String id) {
-        return memberRepository.findMemberByMemberEmail(id).isPresent();
+    public Boolean checkDuplicateId(String email) {
+
+        if(!memberRepository.existsByMemberEmail(email))
+            throw new BaseException(EXIST_EMAIL);
+        return true;
     }
 
     public String getMemberAdditionInfo(MemberAuthContext context, MemberAdditionInfoRequestDto request) {
+
         Member member = memberRepository.findMemberByMemberEmail(context.email())
                 .orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
         member.addMemberAdditionInfo(request);
         return "설정 완료";
     }
 
-
     @NotNull
     private TokenResponse getTokenResponse(HttpServletResponse response, Member member) {
+
         AccessToken accessToken = jwtProvider.generateAccessToken(member);
         RefreshToken refreshToken = jwtProvider.generateRefreshToken(member);
         TokenResponse tokenResponse = TokenResponse.of(accessToken, refreshToken);
@@ -113,6 +120,4 @@ public class MemberServiceImpl implements MemberService {
 
         return tokenResponse;
     }
-
-
 }
