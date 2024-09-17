@@ -28,7 +28,6 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final DefaultCorsFilter defaultCorsFilter;
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
 
@@ -41,9 +40,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .securityContext((securityContext) -> {
-                    securityContext.securityContextRepository(securityContextRepository());
+                    securityContext
+                            .securityContextRepository(securityContextRepository())
+                            .requireExplicitSave(true);
                 })
-                .addFilterBefore(defaultCorsFilter, CorsFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)

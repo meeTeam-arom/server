@@ -67,8 +67,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, request, response);
 
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         filterChain.doFilter(request, response);
     }
 
