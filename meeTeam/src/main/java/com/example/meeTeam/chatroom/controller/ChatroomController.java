@@ -2,9 +2,7 @@ package com.example.meeTeam.chatroom.controller;
 
 import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
 import com.example.meeTeam.chatroom.service.ChatroomService;
-import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.global.exception.BaseResponse;
-import com.example.meeTeam.member.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.example.meeTeam.chatroom.repository;
 
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.MemberChatroom;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

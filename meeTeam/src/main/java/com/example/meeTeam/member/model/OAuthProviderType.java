@@ -1,12 +1,11 @@
-package com.example.meeTeam.member;
+package com.example.meeTeam.member.model;
 
 import lombok.Getter;
 
 @Getter
 public enum OAuthProviderType {
     LOCAL("local"),
-    KAKAO("kakao"),
-    NAVER("naver");
+    KAKAO("kakao");
 
     private final String provider;
 

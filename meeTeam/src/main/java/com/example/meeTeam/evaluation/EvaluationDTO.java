@@ -1,6 +1,6 @@
 package com.example.meeTeam.evaluation;
 
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import lombok.*;
 
 import java.util.ArrayList;

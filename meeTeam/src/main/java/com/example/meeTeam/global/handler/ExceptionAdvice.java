@@ -32,6 +32,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler
     public ResponseEntity<Object> validation(MethodArgumentNotValidException e) {
+        log.error(e.getBindingResult().getFieldErrors().get(0).toString());
         String message = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         BaseResponse<?> baseResponse = BaseResponse.onFailure(ErrorCode.BINDING_ERROR.getCode(), message, null);
         return handleExceptionInternal(baseResponse);
@@ -44,7 +45,8 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler
     public ResponseEntity<Object> exception(Exception e) {
-        ErrorCode errorCode = ErrorCode._INTERNAL_SERVER_ERROR;
+        log.error(e.getMessage());
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         BaseResponse<?> baseResponse = BaseResponse.onFailure(errorCode.getCode(), errorCode.getMessage(), null);
         return handleExceptionInternal(baseResponse);
     }
@@ -59,107 +61,6 @@ public class ExceptionAdvice {
         Reason.ReasonDto errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         BaseResponse<?> baseResponse = BaseResponse.onFailure(errorReasonHttpStatus.getCode(), errorReasonHttpStatus.getMessage(), null);
         return handleExceptionInternal(baseResponse);
-    }
-
-    /**
-     * [Exception] API 호출 시 'Header' 내에 데이터 값이 유효하지 않은 경우
-     *
-     * @param ex MissingRequestHeaderException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    protected ResponseEntity<Object> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
-        log.error("MissingRequestHeaderException", ex);
-
-        return handleExceptionInternal(ErrorCode.REQUEST_BODY_MISSING_ERROR);
-    }
-
-    /**
-     * [Exception] 클라이언트에서 Body로 '객체' 데이터가 넘어오지 않았을 경우
-     *
-     * @param ex HttpMessageNotReadableException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler
-    public ResponseEntity<Object> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException ex) {
-        log.info("HttpMessageNotReadableException", ex);
-        return handleExceptionInternal(ErrorCode.REQUEST_BODY_MISSING_ERROR);
-    }
-
-    /**
-     * [Exception] 클라이언트에서 request로 '파라미터로' 데이터가 넘어오지 않았을 경우
-     *
-     * @param ex MissingServletRequestParameterException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    protected ResponseEntity<Object> handleMissingRequestHeaderExceptionException(
-            MissingServletRequestParameterException ex) {
-        log.error("handleMissingServletRequestParameterException", ex);
-        return handleExceptionInternal(ErrorCode.MISSING_REQUEST_PARAMETER_ERROR);
-    }
-
-
-    /**
-     * [Exception] 잘못된 서버 요청일 경우 발생한 경우
-     *
-     * @param e HttpClientErrorException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(HttpClientErrorException.BadRequest.class)
-    protected ResponseEntity<Object> handleBadRequestException(HttpClientErrorException e) {
-        log.error("HttpClientErrorException.BadRequest", e);
-        return handleExceptionInternal(ErrorCode.BAD_REQUEST_ERROR);
-    }
-
-
-    /**
-     * [Exception] NULL 값이 발생한 경우
-     *
-     * @param e NullPointerException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(NullPointerException.class)
-    protected ResponseEntity<Object> handleNullPointerException(NullPointerException e) {
-        log.error("handleNullPointerException", e);
-        return handleExceptionInternal(ErrorCode.NULL_POINT_ERROR);
-    }
-
-    /**
-     * Input / Output 내에서 발생한 경우
-     *
-     * @param ex IOException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(IOException.class)
-    protected ResponseEntity<Object> handleIOException(IOException ex) {
-        log.error("handleIOException", ex);
-        return handleExceptionInternal(ErrorCode.IO_ERROR);
-    }
-
-    /**
-     * com.fasterxml.jackson.core 내에 Exception 발생하는 경우
-     *
-     * @param ex JsonProcessingException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(JsonProcessingException.class)
-    protected ResponseEntity<Object> handleJsonProcessingException(JsonProcessingException ex) {
-        log.error("handleJsonProcessingException", ex);
-        return handleExceptionInternal(ErrorCode.REQUEST_BODY_MISSING_ERROR);
-    }
-
-    /**
-     * [Exception] 잘못된 주소로 요청 한 경우
-     *
-     * @param e NoHandlerFoundException
-     * @return ResponseEntity<ErrorResponse>
-     */
-    @ExceptionHandler(NoHandlerFoundException.class)
-    protected ResponseEntity<Object> handleNoHandlerFoundExceptionException(NoHandlerFoundException e) {
-        log.error("handleNoHandlerFoundExceptionException", e);
-        return handleExceptionInternal(ErrorCode.NOT_FOUND_ERROR);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(BaseResponse<?> response) {

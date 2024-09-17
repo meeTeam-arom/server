@@ -1,6 +1,6 @@
 package com.example.meeTeam.global.auth.member;
 
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import lombok.Builder;
 
 @Builder

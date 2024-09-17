@@ -3,7 +3,7 @@ package com.example.meeTeam.member.service;
 import com.example.meeTeam.global.auth.member.MemberAuthContext;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

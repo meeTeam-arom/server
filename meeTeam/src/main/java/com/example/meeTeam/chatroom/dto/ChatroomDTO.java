@@ -2,11 +2,10 @@ package com.example.meeTeam.chatroom.dto;
 
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.MemberChatroom;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.schedules.Schedule;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

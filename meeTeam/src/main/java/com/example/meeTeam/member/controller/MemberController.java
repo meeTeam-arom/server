@@ -1,15 +1,16 @@
 package com.example.meeTeam.member.controller;
 
+import com.example.meeTeam.global.auth.member.MemberAuthContext;
 import com.example.meeTeam.global.exception.BaseResponse;
 import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -24,18 +25,29 @@ public class MemberController {
 
     @PostMapping("/signup")
     public BaseResponse<?> signup(@Valid @RequestBody MemberSignupRequestDto request){
-        log.info("컨트롤러 진입");
         return BaseResponse.onSuccess(memberService.createMember(request));
     }
 
-    @PostMapping("/login")
+    //이메일 중복 확인
+    @GetMapping("/signup/checkEmail")
+    public BaseResponse<?> checkId(@RequestParam("email") String email){
+        return BaseResponse.onSuccess(memberService.checkDuplicateId(email));
+    }
+
+    @PostMapping("/login/local")
     public BaseResponse<?> login(@Valid @RequestBody MemberLocalLoginRequestDto request, HttpServletResponse response){
-        log.info("로그인 진입");
         return BaseResponse.onSuccess(memberService.localLogin(request, response));
     }
 
-    @PostMapping("/kakao-login")
+    @PostMapping("/login/kakao")
     public BaseResponse<?> kakaoLogin(@Valid @RequestBody MemberKakaoLoginRequestDto request, HttpServletResponse response) throws IOException {
         return BaseResponse.onSuccess(memberService.kakaoLogin(request.userId(), response));
     }
+
+    @PostMapping("/user-info")
+    public BaseResponse<?> postUserInfoAfterSignUp(@AuthenticationPrincipal MemberDetails principal,
+                                                   @Valid @RequestBody MemberAdditionInfoRequestDto request){
+        return BaseResponse.onSuccess(memberService.getMemberAdditionInfo(principal.context(),  request));
+    }
+
 }

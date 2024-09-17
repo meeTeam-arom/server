@@ -2,7 +2,7 @@ package com.example.meeTeam.chatroom;
 
 import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.global.entity.BaseEntity;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.schedules.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
