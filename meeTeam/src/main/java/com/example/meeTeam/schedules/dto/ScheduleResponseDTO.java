@@ -1,6 +1,4 @@
-package com.example.meeTeam.schedules;
-
-import com.example.meeTeam.chatroom.Chatroom;
+package com.example.meeTeam.schedules.dto;
 
 public class ScheduleResponseDTO {
     public record listSchedule (

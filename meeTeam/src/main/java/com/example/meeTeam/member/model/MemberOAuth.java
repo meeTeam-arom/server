@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @Entity
 @Table(name = "member_oauth")
@@ -17,10 +19,6 @@ public class MemberOAuth {
     @Column(name = "member_oauth_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id") @NotNull
-    private Member member;
-
     @Column(name = "oauth_id") @NotNull
     private String oauthId;
 
@@ -28,18 +26,26 @@ public class MemberOAuth {
     @Enumerated(value = EnumType.STRING)
     private OAuthProviderType oAuthProviderType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+
     @Builder
-    private MemberOAuth(Member member, String oauthId, OAuthProviderType oAuthProviderType) {
-        this.member = member;
+    private MemberOAuth(String oauthId, OAuthProviderType oAuthProviderType) {
         this.oauthId = oauthId;
         this.oAuthProviderType = oAuthProviderType;
     }
 
-    public static MemberOAuth createMemberOAuthWithSocialLogin(Member member, String oauthId, OAuthProviderType oAuthProviderType){
+    public static MemberOAuth createMemberOAuth(OAuthProviderType oAuthProviderType){
         return MemberOAuth.builder()
-                .member(member)
-                .oauthId(oauthId)
+                .oauthId(UUID.randomUUID().toString())
                 .oAuthProviderType(oAuthProviderType)
                 .build();
+    }
+
+    public void updateMemberOAuthBy(Member member){
+        this.member = member;
+        member.getMemberOAuths().add(this);
     }
 }

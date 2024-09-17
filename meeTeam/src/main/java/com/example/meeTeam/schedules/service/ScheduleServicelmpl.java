@@ -1,11 +1,14 @@
-package com.example.meeTeam.schedules;
+package com.example.meeTeam.schedules.service;
 
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
 import com.example.meeTeam.chatroom.service.ChatroomService;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.schedules.Schedule;
+import com.example.meeTeam.schedules.repository.ScheduleRepository;
+import com.example.meeTeam.schedules.dto.ScheduleRequestDTO;
+import com.example.meeTeam.schedules.dto.ScheduleResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
