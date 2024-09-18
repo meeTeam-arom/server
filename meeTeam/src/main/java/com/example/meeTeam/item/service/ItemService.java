@@ -4,23 +4,29 @@ import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
 import com.example.meeTeam.image.Image;
 import com.example.meeTeam.item.Item;
-import com.example.meeTeam.item.dto.ItemFindRequest;
-import com.example.meeTeam.item.dto.ItemRequest;
-import com.example.meeTeam.item.dto.ItemResponse;
-import com.example.meeTeam.item.dto.ItemUpdateRequest;
+import com.example.meeTeam.item.dto.*;
 import com.example.meeTeam.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ItemService {
 
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
+
+    public ItemListResponseDto getAllItemsByCategory(String category, Pageable pageable){
+        Page<Item> items = itemRepository.findByItemCategoryWithPaging(category, pageable);
+        return ItemListResponseDto.from(items);
+    }
 
     // 새 상품 등록
     public Item createItem(Long id, int price, String name, String description, Image image, String imageUrl) {
