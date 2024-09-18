@@ -1,7 +1,7 @@
 package com.example.meeTeam.chatroom;
 
 import com.example.meeTeam.global.entity.BaseEntity;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

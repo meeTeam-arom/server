@@ -2,7 +2,7 @@ package com.example.meeTeam.chatroom.dto;
 
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.ProjectRole;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import lombok.*;
 
 @Getter

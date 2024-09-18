@@ -5,7 +5,7 @@ import com.example.meeTeam.global.auth.token.vo.AccessToken;
 import com.example.meeTeam.global.auth.token.vo.RefreshToken;
 import com.example.meeTeam.global.exception.BaseException;
 import com.example.meeTeam.global.exception.codes.ErrorCode;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

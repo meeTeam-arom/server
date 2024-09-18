@@ -11,12 +11,11 @@ import com.example.meeTeam.chatroom.repository.MemberChatroomRepository;
 import com.example.meeTeam.chatroom.repository.ProjectRoleRepository;
 import com.example.meeTeam.evaluation.EvaluationService;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
 import com.example.meeTeam.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -408,7 +407,7 @@ public class ChatroomServicelmpl implements ChatroomService{
                 .orElseGet(() -> new ArrayList<>());
 
         if(memberChatroomsByChatroom.isEmpty()){
-            throw new MyExceptionHandler(NOT_VALID_ERROR);
+            throw new MyExceptionHandler(NO_CHATROOM_PARTICIPATED);
         }
 
         List<Member> members = new ArrayList<>();

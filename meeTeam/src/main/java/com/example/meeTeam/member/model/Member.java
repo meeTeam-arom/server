@@ -1,9 +1,10 @@
-package com.example.meeTeam.member;
+package com.example.meeTeam.member.model;
 
 import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.evaluation.Evaluation;
 import com.example.meeTeam.global.entity.BaseEntity;
 import com.example.meeTeam.member.dto.MemberRequest;
+import com.example.meeTeam.mypage.dto.MyPageRequest;
 import com.example.meeTeam.orders.OrderItem;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,7 @@ public class Member extends BaseEntity {
 
     private String memberPhoneNum;
 
+    @Column(unique = true)
     private String memberEmail;
 
     private double memberMannerTemp;
@@ -47,8 +49,8 @@ public class Member extends BaseEntity {
 
     @Getter
     public enum Role {
-        USER("ROLE_USER"),
-        ADMIN("ROLE_ADMIN");
+        USER("USER"),
+        ADMIN("ADMIN");
 
         Role(String name) {}
 
@@ -82,11 +84,14 @@ public class Member extends BaseEntity {
         this.availableDate = availableDate;
     }
 
+    public void encodePassword(String encodedPassword){
+        this.memberPassword = encodedPassword;
+    }
+
     public static Member createMember(MemberRequest.MemberSignupRequestDto dto) {
         return Member.builder()
                 .memberPassword(dto.password())
                 .memberEmail(dto.email())
-                .memberName(dto.name())
                 .memberPhoneNum(dto.phoneNumber())
                 .memberMannerTemp(36.5)
                 .memberEarnedCoins(0L)
@@ -94,7 +99,22 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    public void addMemberAdditionInfo(MemberRequest.MemberAdditionInfoRequestDto additionInfo) {
+        this.memberName = additionInfo.name();
+        this.latitude = additionInfo.latitude();
+        this.longitude = additionInfo.longitude();
+    }
+
     public void updateMannerTemp(double memberMannerTemp){
         this.memberMannerTemp = memberMannerTemp;
+    }
+
+    public void updateMemberMyPage(MyPageRequest.MyPageUpdateRequestDto request){
+        this.memberName = request.memberName();
+        this.memberPhoneNum = request.memberPhoneNum();
+        this.memberEmail = request.memberEmail();
+        this.latitude = request.latitude();
+        this.longitude = request.longitude();
+        this.availableDate = request.availableDate();
     }
 }

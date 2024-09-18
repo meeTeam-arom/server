@@ -1,6 +1,7 @@
-package com.example.meeTeam.schedules;
+package com.example.meeTeam.schedules.dto;
 
 import com.example.meeTeam.chatroom.Chatroom;
+import com.example.meeTeam.schedules.Schedule;
 import lombok.*;
 
 @Getter

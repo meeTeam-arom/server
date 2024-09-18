@@ -1,8 +1,8 @@
-package com.example.meeTeam.schedules;
+package com.example.meeTeam.schedules.service;
 
-import com.example.meeTeam.chatroom.dto.ChatroomDTO;
 import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
-import com.example.meeTeam.member.Member;
+import com.example.meeTeam.schedules.dto.ScheduleRequestDTO;
+import com.example.meeTeam.schedules.dto.ScheduleResponseDTO;
 
 import java.util.List;
 

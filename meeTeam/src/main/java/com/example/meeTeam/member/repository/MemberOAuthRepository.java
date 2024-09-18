@@ -1,7 +1,6 @@
 package com.example.meeTeam.member.repository;
 
-import com.example.meeTeam.member.Member;
-import com.example.meeTeam.member.MemberOAuth;
+import com.example.meeTeam.member.model.MemberOAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
