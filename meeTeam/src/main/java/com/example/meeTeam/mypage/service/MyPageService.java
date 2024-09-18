@@ -6,6 +6,7 @@ import com.example.meeTeam.member.repository.MemberRepository;
 import com.example.meeTeam.mypage.dto.MyPageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.meeTeam.mypage.dto.MyPageResponse.*;
 
@@ -15,6 +16,7 @@ public class MyPageService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional(readOnly = true)
     public MyPageBriefResponseDto getProfile(String email) {
         return MyPageBriefResponseDto.from(
                         memberRepository.findMemberByMemberEmail(email)
@@ -22,6 +24,7 @@ public class MyPageService {
         );
     }
 
+    @Transactional
     public void updateProfile(String email, MyPageRequest.MyPageUpdateRequestDto request) {
         memberRepository.findMemberByMemberEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND))
