@@ -43,7 +43,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public String createMember(MemberSignupRequestDto request) {
-
         Member member = Member.createMember(request);
         member.encodePassword(passwordEncoder.encode(request.password()));
         memberRepository.save(member);
@@ -101,7 +100,6 @@ public class MemberServiceImpl implements MemberService {
         return "설정 완료";
     }
 
-    @NotNull
     private TokenResponse getTokenResponse(HttpServletResponse response, Member member) {
 
         AccessToken accessToken = jwtProvider.generateAccessToken(member);

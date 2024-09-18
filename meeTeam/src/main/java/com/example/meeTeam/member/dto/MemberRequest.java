@@ -28,4 +28,12 @@ public class MemberRequest{
             double latitude,
             double longitude
     ){}
+
+    public record MemberSMSCertificationRequestDto(
+            @Pattern(regexp = "^010\\d{4}\\d{4}$", message = "핸드폰 번호 형식이 올바르지 않습니다.") String phoneNumber
+    ){}
+
+    public record MemberSMSValidationRequestDto(
+            @NotEmpty String code
+    ){}
 }
