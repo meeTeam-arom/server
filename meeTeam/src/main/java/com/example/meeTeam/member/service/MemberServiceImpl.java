@@ -43,6 +43,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public String createMember(MemberSignupRequestDto request) {
+
+        log.info("회원가입 : {}", request.toString());
         Member member = Member.createMember(request);
         member.encodePassword(passwordEncoder.encode(request.password()));
         memberRepository.save(member);
@@ -55,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public MemberResponse.MemberTokenResDto localLogin(MemberLocalLoginRequestDto request, HttpServletResponse response){
-
+        log.info("로그인  : {}", request.toString());
         Member member = memberRepository
                 .findMemberByMemberEmail(request.email())
                 .orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
