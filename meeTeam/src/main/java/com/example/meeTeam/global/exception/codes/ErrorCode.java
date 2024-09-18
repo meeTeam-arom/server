@@ -55,6 +55,9 @@ public enum ErrorCode implements BaseCode {
     EMPTY_TOKEN_PROVIDED(HttpStatus.UNAUTHORIZED, "TOKEN-0002", "토큰 텅텅"),
     INVALID_EMAIL_OR_PASSWORD(HttpStatus.NOT_FOUND, "MEMBER-0001", "유효하지 않는 이메일, 비번"),
 
+    //coolsms 에러
+    COOOLSMS_ERROR(HttpStatus.BAD_REQUEST, "SMS-0000", "Cool SMS 오류"),
+
     // 5xx : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER-0000", "서버 에러");
 

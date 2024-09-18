@@ -28,6 +28,9 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private ItemCategory itemCategory;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_image_id")
     private Image image;

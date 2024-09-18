@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MyPageController {
 
+    //TODO : 멤버의 구매목록, 채팅방 목록 반환
+
     private final MyPageService mypageService;
 
     @GetMapping("/profile")
