@@ -27,10 +27,10 @@ public class MemberController {
     private final CoolSmsService coolSmsService;
     private final SignUpFormValidator signUpFormValidator;
 
-    @InitBinder("MemberSignupRequestDto")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(signUpFormValidator);
-    }
+//    @InitBinder("MemberSignupRequestDto")
+//    public void initBinder(WebDataBinder webDataBinder) {
+//        webDataBinder.addValidators(signUpFormValidator);
+//    }
 
     @PostMapping("/signup")
     public BaseResponse<?> signup(@Valid @RequestBody MemberSignupRequestDto request, HttpSession session){
