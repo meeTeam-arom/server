@@ -9,5 +9,5 @@ import java.util.List;
 public interface ScheduleService {
     ScheduleResponseDTO.listSchedule saveSchedule(ScheduleRequestDTO.saveSchedule scheduleDTO);
     List<ScheduleResponseDTO.listSchedule> getAllSchedule();
-    List<ScheduleResponseDTO.listSchedule> getScheduleByChatroom(ChatroomRequestDTO.chatroomId chatroomId);
+    List<ScheduleResponseDTO.listSchedule> getScheduleByChatroom(ChatroomRequestDTO.ChatroomId chatroomId);
 }

@@ -1,15 +1,15 @@
 package com.example.meeTeam.chatroom.service;
 
+import com.example.meeTeam.chatroom.Chat;
 import com.example.meeTeam.chatroom.Chatroom;
 import com.example.meeTeam.chatroom.MemberChatroom;
 import com.example.meeTeam.chatroom.ProjectRole;
-import com.example.meeTeam.chatroom.dto.ChatroomDTO;
-import com.example.meeTeam.chatroom.dto.ChatroomRequestDTO;
-import com.example.meeTeam.chatroom.dto.ChatroomResponseDTO;
+import com.example.meeTeam.chatroom.dto.*;
+import com.example.meeTeam.chatroom.repository.ChatRepository;
 import com.example.meeTeam.chatroom.repository.ChatroomRepository;
 import com.example.meeTeam.chatroom.repository.MemberChatroomRepository;
 import com.example.meeTeam.chatroom.repository.ProjectRoleRepository;
-import com.example.meeTeam.evaluation.EvaluationService;
+import com.example.meeTeam.evaluation.service.EvaluationService;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
@@ -34,11 +34,12 @@ public class ChatroomServicelmpl implements ChatroomService{
     private final MemberChatroomRepository memberChatroomRepository;
     private final ProjectRoleRepository projectRoleRepository;
     private final MemberRepository memberRepository;
+    private final ChatRepository chatRepository;
 
     private final EvaluationService evaluationService;
 
-    public String calHalfwayPoint(ChatroomRequestDTO.chatroomId chatroomId){
-       Chatroom chatroom = getChatroomByRoomID(chatroomId);
+    public String calHalfwayPoint(ChatroomRequestDTO.ChatroomId chatroomId){
+       Chatroom chatroom = getChatroomByRoomID(chatroomId.id());
        List<Member> members = getMemberByChatroomID(ChatroomDTO.toDTO(chatroom));
         int numberOfMembers = members.size();
 
@@ -70,10 +71,10 @@ public class ChatroomServicelmpl implements ChatroomService{
     }
 
 
-    public String enterChatroomNByCode(ChatroomRequestDTO.enterChatroom enterChatroom,MemberDetails memberDetails){
+    public String enterChatroomNByCode(ChatroomRequestDTO.EnterChatroom enterChatroom,MemberDetails memberDetails){
 
         //코드 맞는지 확인
-        ChatroomRequestDTO.chatroomCode code = new ChatroomRequestDTO.chatroomCode(enterChatroom.code());
+        ChatroomRequestDTO.ChatroomCode code = new ChatroomRequestDTO.ChatroomCode(enterChatroom.code());
         ChatroomDTO chatroomDTO = getChatroomByCode(code);
 
         if(chatroomDTO == null){
@@ -131,12 +132,12 @@ public class ChatroomServicelmpl implements ChatroomService{
         return "success";
     }
 
-    public ChatroomResponseDTO.enterSuccessMessage enterChatroom(MemberDetails memberDetails, ChatroomRequestDTO.chatroomId chatroomId){
+    public ChatroomResponseDTO.EnterSuccessMessage enterChatroom(MemberDetails memberDetails, ChatroomRequestDTO.ChatroomId chatroomId){
        //방에 들어가 있는지 확인이 필요하긴함.
 
 
 
-        Chatroom chatroom = getChatroomByRoomID(chatroomId);
+        Chatroom chatroom = getChatroomByRoomID(chatroomId.id());
         ChatroomDTO chatroomDTO = ChatroomDTO.toDTO(chatroom);
         List<Member> members = getMemberByChatroomID(chatroomDTO);
 
@@ -150,7 +151,7 @@ public class ChatroomServicelmpl implements ChatroomService{
         if(teamLeader != null) teamLeaderName = teamLeader.getMemberName();
 
 
-        ChatroomResponseDTO.enterSuccessMessage successMessage = new ChatroomResponseDTO.enterSuccessMessage(
+        ChatroomResponseDTO.EnterSuccessMessage successMessage = new ChatroomResponseDTO.EnterSuccessMessage(
                 chatroom.getChatroomName(),
                 chatroom.getTotalMember(),
                 teamLeaderName,
@@ -175,7 +176,7 @@ public class ChatroomServicelmpl implements ChatroomService{
         return teamLeader;
     }
 
-    public ChatroomDTO getChatroomByCode(ChatroomRequestDTO.chatroomCode code){
+    public ChatroomDTO getChatroomByCode(ChatroomRequestDTO.ChatroomCode code){
 
         List<Chatroom> getChatroom = Optional.ofNullable(chatroomRepository.findByCode(code.code()))
                 .orElseGet(() -> new ArrayList<>());
@@ -191,8 +192,8 @@ public class ChatroomServicelmpl implements ChatroomService{
         return chatroom;
     }
 
-    public String calAvailableDate(ChatroomRequestDTO.chatroomId chatroomId){
-        Chatroom chatroom = getChatroomByRoomID(chatroomId);
+    public String calAvailableDate(ChatroomRequestDTO.ChatroomId chatroomId){
+        Chatroom chatroom = getChatroomByRoomID(chatroomId.id());
        List<Member> members = getMemberByChatroomID(ChatroomDTO.toDTO(chatroom));
 
        if(members.size() != chatroom.getTotalMember()) throw new MyExceptionHandler(SHORT_NUMBER_PEOPLE);
@@ -286,9 +287,9 @@ public class ChatroomServicelmpl implements ChatroomService{
         projectRoleRepository.save(role);
     }
 
-    public ChatroomDTO createChatroom(ChatroomRequestDTO.chatroomCreate data, MemberDetails memberDetails){
+    public ChatroomDTO createChatroom(ChatroomRequestDTO.ChatroomCreate data, MemberDetails memberDetails){
 
-        ChatroomRequestDTO.chatroomCode chatroomCode = createChatroomCode();
+        ChatroomRequestDTO.ChatroomCode chatroomCode = createChatroomCode();
         Optional<Member> member = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
 
         if(!member.isPresent()){
@@ -329,7 +330,7 @@ public class ChatroomServicelmpl implements ChatroomService{
 
 
 
-    public boolean isVaildCode(ChatroomRequestDTO.chatroomCode code){
+    public boolean isVaildCode(ChatroomRequestDTO.ChatroomCode code){
 
         List<ChatroomDTO> allChatrooms = getAllChatrooms();
         if(!allChatrooms.isEmpty()){
@@ -340,14 +341,14 @@ public class ChatroomServicelmpl implements ChatroomService{
         return true;
     }
 
-    public ChatroomRequestDTO.chatroomCode createChatroomCode(){
+    public ChatroomRequestDTO.ChatroomCode createChatroomCode(){
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = 5;
         Random random = new Random();
         String randomString="";
 
-        ChatroomRequestDTO.chatroomCode code;
+        ChatroomRequestDTO.ChatroomCode code;
 
         do {
             randomString = random.ints(leftLimit, rightLimit + 1)
@@ -355,7 +356,7 @@ public class ChatroomServicelmpl implements ChatroomService{
                     .limit(targetStringLength)
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                     .toString();
-            code = new ChatroomRequestDTO.chatroomCode(randomString);
+            code = new ChatroomRequestDTO.ChatroomCode(randomString);
 
         }while(!isVaildCode(code));
 
@@ -429,24 +430,26 @@ public class ChatroomServicelmpl implements ChatroomService{
        return null;
     }
 
-    public Chatroom getChatroomByRoomID(ChatroomRequestDTO.chatroomId chatroomid){
-        Optional<Chatroom> chatroomById = chatroomRepository.findById(chatroomid.id());
+    public Chatroom getChatroomByRoomID(Long chatroomid){
+        Optional<Chatroom> chatroomById = chatroomRepository.findById(chatroomid);
         if(!chatroomById.isPresent()) throw new MyExceptionHandler(ROOM_NOT_FOUND);
 
         Chatroom chatroom = chatroomById.get();
         return chatroom;
     }
 
-    public List<ChatroomResponseDTO.chatroomList> exitChatroom(MemberDetails memberDetails, ChatroomRequestDTO.chatroomId chatroomId){
+    public List<ChatroomResponseDTO.ChatroomList> exitChatroom(MemberDetails memberDetails, ChatroomRequestDTO.ChatroomId chatroomId){
 
-        Optional<Member> memberByEmail = memberRepository.findMemberByMemberEmail(memberDetails.getUsername());
-        Chatroom chatroom = getChatroomByRoomID(chatroomId);
+        Optional<Member> memberByEmail = memberRepository.findMemberByMemberName(memberDetails.getUsername());
+        Chatroom chatroom = getChatroomByRoomID(chatroomId.id());
         ChatroomDTO chatroomDTO = ChatroomDTO.toDTO(chatroom);
 
        if(!memberByEmail.isPresent()) throw new MyExceptionHandler(EMAIL_NOT_FOUND);
        ProjectRole role = getRoleByChatroomAndMember(memberByEmail.get(),chatroomDTO);
        if(role.getRole() == ProjectRole.Role.LEADER || chatroom.getMakePerson().getId()==memberByEmail.get().getId()){
            List<Member> members = getMemberByChatroomID(chatroomDTO);
+
+           //한명씩 서로 평가해주는거
            for(Member member : members){
                for(Member targetMember: members){
                    if(member.getId() == targetMember.getId()) continue;
@@ -466,25 +469,49 @@ public class ChatroomServicelmpl implements ChatroomService{
        }
     }
 
-    public List<ChatroomResponseDTO.chatroomList> showChatroomListByMember(MemberDetails memberDetails){
+    public List<ChatroomResponseDTO.ChatroomList> showChatroomListByMember(MemberDetails memberDetails){
        Optional<Member> member = memberRepository.findMemberByMemberName(memberDetails.getUsername());
+
        if(!member.isPresent()){
            throw new MyExceptionHandler(MEMBER_NOT_FOUND);
        }
+
        List<ChatroomDTO> chatroomByMember = getChatroomsByMember(member.get());
 
         for(int i=chatroomByMember.size()-1;i>=0;i--){
-            if(chatroomByMember.get(i).isStatus() == false){
-                chatroomByMember.remove(i);
-            }
+            if(chatroomByMember.get(i).isStatus() == false) chatroomByMember.remove(i);
         }
 
-        List<ChatroomResponseDTO.chatroomList> chatroomList = new ArrayList<>();
+        List<ChatroomResponseDTO.ChatroomList> chatroomList = new ArrayList<>();
+
         for(ChatroomDTO chatroomDTO : chatroomByMember){
             chatroomList.add(ChatroomResponseDTO.toList(chatroomDTO));
         }
 
         return chatroomList;
+    }
+
+    public ChatResponseDTO.AnonymousMessage sendAnonymousMessage(ChatRequestDTO.AnonymousMesssage anonnymousMessage){
+        ChatResponseDTO.AnonymousMessage message = new ChatResponseDTO.AnonymousMessage(
+                anonnymousMessage.chatroomId(),
+                anonnymousMessage.receiveMemberId(),
+                anonnymousMessage.content()
+        );
+
+        Chatroom chatroom = getChatroomByRoomID(anonnymousMessage.chatroomId());
+        Member sendMember=null;
+        Member receiveMember=null;
+
+        Chat chat = new Chat(
+                chatroom,
+                sendMember,
+                receiveMember,
+                anonnymousMessage.content()
+        );
+
+        chatRepository.save(chat);
+
+        return message;
     }
 
 }

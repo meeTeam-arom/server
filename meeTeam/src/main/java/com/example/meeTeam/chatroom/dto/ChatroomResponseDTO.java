@@ -6,25 +6,27 @@ import lombok.Setter;
 import java.util.List;
 
 public class ChatroomResponseDTO {
-    public record enterSuccessMessage(
+    public record EnterSuccessMessage(
             String chatroomName,
             int totalMember,
             String leaderName,
             List<String> members
     ){}
 
-    public record chatroomList(
+    public record ChatroomList(
             long id,
             String chatroomName,
             int totalMember
     ){}
 
-    public static chatroomList toList(ChatroomDTO chatroomDTO){
-        ChatroomResponseDTO.chatroomList chatroomList = new ChatroomResponseDTO.chatroomList(
+    public static ChatroomList toList(ChatroomDTO chatroomDTO){
+        ChatroomResponseDTO.ChatroomList chatroomList = new ChatroomResponseDTO.ChatroomList(
                 chatroomDTO.getId(),
                 chatroomDTO.getChatroomName(),
                 chatroomDTO.getTotalMember()
         );
         return chatroomList;
     }
+
+
 }

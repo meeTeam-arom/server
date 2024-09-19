@@ -23,7 +23,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/schedule/showlist")
-    public BaseResponse<?> createChatroom(@AuthenticationPrincipal MemberDetails member, ChatroomRequestDTO.chatroomId chatroomId){
+    public BaseResponse<?> createChatroom(@AuthenticationPrincipal MemberDetails member, ChatroomRequestDTO.ChatroomId chatroomId){
         return BaseResponse.onSuccess(scheduleService.getScheduleByChatroom(chatroomId));
     }
 

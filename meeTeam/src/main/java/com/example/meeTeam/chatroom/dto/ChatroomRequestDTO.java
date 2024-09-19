@@ -1,25 +1,26 @@
 package com.example.meeTeam.chatroom.dto;
 
+import com.example.meeTeam.member.model.Member;
 import lombok.Getter;
 import lombok.Setter;
 
 public class ChatroomRequestDTO {
 
-    public record chatroomCreate(
+    public record ChatroomCreate(
             String chatroomName,
             int totoalMember,
             boolean wantLeader
     ){}
 
-    public record chatroomId(
+    public record ChatroomId(
             Long id
     ){}
 
-    public record chatroomCode(
+    public record ChatroomCode(
             String code
     ){}
 
-    public record enterChatroom(
+    public record EnterChatroom(
              String code,
              boolean wantLeader,
              int totalMember

@@ -1,6 +1,8 @@
-package com.example.meeTeam.evaluation;
+package com.example.meeTeam.evaluation.controller;
 
-import com.example.meeTeam.chatroom.dto.ChatroomDTO;
+import com.example.meeTeam.evaluation.dto.EvaluationDTO;
+import com.example.meeTeam.evaluation.dto.EvaluationRequestDTO;
+import com.example.meeTeam.evaluation.service.EvaluationService;
 import com.example.meeTeam.global.exception.BaseResponse;
 import com.example.meeTeam.member.dto.MemberDetails;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +21,15 @@ public class EvaluationController {
     private final EvaluationService evaluationService;
 
     @PostMapping("/evaluation")
-    public BaseResponse<?> saveEvaluation(@AuthenticationPrincipal MemberDetails member, @RequestBody EvaluationDTO.doingEvaluationDTO evaluationDTO) {
+    public BaseResponse<?> saveEvaluation(@AuthenticationPrincipal MemberDetails member, @RequestBody EvaluationRequestDTO.doingEvaluationDTO evaluationDTO) {
         evaluationService.doEvaluation(member, evaluationDTO);
         return BaseResponse.onSuccess("success");
     }
 
+    @GetMapping("/evaluation/beforeList")
+    public BaseResponse<?> beforeEvaluation(@AuthenticationPrincipal MemberDetails member) {
+        return BaseResponse.onSuccess(evaluationService.beforeDoingEvaluationListByMember(member));
+    }
 }
 
 

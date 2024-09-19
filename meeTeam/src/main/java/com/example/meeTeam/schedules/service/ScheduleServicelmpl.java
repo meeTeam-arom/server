@@ -45,8 +45,8 @@ public class ScheduleServicelmpl implements ScheduleService{
         return scheduleDTOList;
     }
 
-    public List<ScheduleResponseDTO.listSchedule> getScheduleByChatroom(ChatroomRequestDTO.chatroomId chatroomId){
-        Chatroom chatroom = chatroomService.getChatroomByRoomID(chatroomId);
+    public List<ScheduleResponseDTO.listSchedule> getScheduleByChatroom(ChatroomRequestDTO.ChatroomId chatroomId){
+        Chatroom chatroom = chatroomService.getChatroomByRoomID(chatroomId.id());
         List<Schedule> scheduleList = Optional.ofNullable(scheduleRepository.findByChatroom(Chatroom.toEntity(ChatroomDTO.toDTO(chatroom))))
                 .orElseGet(() -> new ArrayList<>());
 

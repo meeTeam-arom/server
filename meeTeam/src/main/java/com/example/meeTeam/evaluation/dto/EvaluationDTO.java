@@ -1,4 +1,4 @@
-package com.example.meeTeam.evaluation;
+package com.example.meeTeam.evaluation.dto;
 
 import com.example.meeTeam.member.model.Member;
 import lombok.*;
@@ -17,12 +17,5 @@ public class EvaluationDTO {
     private Member member;
     private Member targetMember;
     private boolean complete;
-
-    @Getter
-    public static class doingEvaluationDTO{
-        private List<String> targetMembersEmail=new ArrayList<>();
-        private List<Integer> scoreList = new ArrayList<>();
-    }
-
 
 }

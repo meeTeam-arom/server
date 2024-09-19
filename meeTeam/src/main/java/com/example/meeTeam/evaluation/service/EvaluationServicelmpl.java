@@ -1,5 +1,10 @@
-package com.example.meeTeam.evaluation;
+package com.example.meeTeam.evaluation.service;
 
+import com.example.meeTeam.evaluation.Evaluation;
+import com.example.meeTeam.evaluation.dto.EvaluationDTO;
+import com.example.meeTeam.evaluation.dto.EvaluationRequestDTO;
+import com.example.meeTeam.evaluation.dto.EvaluationResponseDTO;
+import com.example.meeTeam.evaluation.repository.EvaluationRepository;
 import com.example.meeTeam.global.handler.MyExceptionHandler;
 import com.example.meeTeam.member.model.Member;
 import com.example.meeTeam.member.dto.MemberDetails;
@@ -23,13 +28,9 @@ public class EvaluationServicelmpl implements EvaluationService{
     private final MemberRepository memberRepository;
 
     public void updateScore(Member member){
-        List<Evaluation> evaluationList = Optional.ofNullable(evaluationRepository.findByMember(member))
-                .orElseGet(() -> new ArrayList<>());
+        List<Evaluation> evaluationList = evaluationRepository.findByMember(member);
 
-        if(evaluationList.isEmpty()){
-            //업데이트 할게 없음
-            throw new MyExceptionHandler(EVALUATION_NOT_FOUND);
-        }
+        if(evaluationList == null || evaluationList.isEmpty()) throw new MyExceptionHandler(EVALUATION_NOT_FOUND);
 
         int numOfList = evaluationList.size();
         Double sumOfEvaluation = 0.0,evaluationScore;
@@ -48,10 +49,10 @@ public class EvaluationServicelmpl implements EvaluationService{
         });
     }
 
-    public void doEvaluation(MemberDetails memberDetails,EvaluationDTO.doingEvaluationDTO evaluationDTO){
+    public void doEvaluation(MemberDetails memberDetails, EvaluationRequestDTO.doingEvaluationDTO evaluationDTO){
 
-        int numOfUsername = evaluationDTO.getTargetMembersEmail().size();
-        int numOfScore = evaluationDTO.getScoreList().size();
+        int numOfUsername = evaluationDTO.targetMembersEmail().size();
+        int numOfScore = evaluationDTO.scoreList().size();
 
         //두개 숫자 맞는지 확인
         if(numOfScore != numOfUsername) throw new MyExceptionHandler(NOT_VALID_ERROR);
@@ -61,7 +62,7 @@ public class EvaluationServicelmpl implements EvaluationService{
 
         List<Member> targetMemberList = new ArrayList<>();
         for(int i=0;i<numOfUsername;i++){
-            Optional<Member> tmpMember = memberRepository.findMemberByMemberEmail(evaluationDTO.getTargetMembersEmail().get(i));
+            Optional<Member> tmpMember = memberRepository.findMemberByMemberEmail(evaluationDTO.targetMembersEmail().get(i));
             if(tmpMember.isPresent()) targetMemberList.add(tmpMember.get());
             else throw new MyExceptionHandler(MEMBER_NOT_FOUND);
         }
@@ -70,7 +71,7 @@ public class EvaluationServicelmpl implements EvaluationService{
         for(int i=0;i<numOfScore;i++){
             evaluationList.add(
                     new Evaluation(
-                        evaluationDTO.getScoreList().get(i),
+                        evaluationDTO.scoreList().get(i),
                         member.get(),
                         targetMemberList.get(i),
                         true
@@ -90,5 +91,27 @@ public class EvaluationServicelmpl implements EvaluationService{
         Evaluation evaluation = new Evaluation(0,member,targetMember, false);
         evaluationRepository.save(evaluation);
     }
+
+    public List<Evaluation> getEvalutaionByMember(Member member){
+        List<Evaluation> evaluationByMember = evaluationRepository.findByMember(member);
+
+        if(evaluationByMember == null || evaluationByMember.isEmpty()) throw new MyExceptionHandler(BAD_REQUEST);
+        return evaluationByMember;
+    }
+
+    public List<EvaluationResponseDTO.beforeEvaluation> beforeDoingEvaluationListByMember(MemberDetails member){
+        Optional<Member> tmpMember = memberRepository.findMemberByMemberName(member.getUsername());
+        tmpMember.orElseThrow(() -> new MyExceptionHandler(BAD_REQUEST));
+        Member nowMember = tmpMember.get();
+
+        List<Evaluation> evaluationList = getEvalutaionByMember(nowMember);
+        List<EvaluationResponseDTO.beforeEvaluation> responseEvaluation = new ArrayList<>();
+        for(Evaluation evaluation : evaluationList){
+            if(evaluation.isComplete()==true) responseEvaluation.add(new EvaluationResponseDTO.beforeEvaluation(evaluation.getMember(),evaluation.getTargetMember()));
+        }
+
+        return responseEvaluation;
+    }
+
 
 }
