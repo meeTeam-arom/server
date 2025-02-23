@@ -29,7 +29,7 @@
 ## 🛠 기술 스택
 | 분야 | 사용 기술 |
 |------|---------|
-| **Front-end** | Android Studio |
+| **Front-end** | Android |
 | **Back-end** | Spring Boot |
 | **Database** | MySQL |
 
